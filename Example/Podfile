@@ -1,9 +1,11 @@
 use_frameworks!
 
-platform :ios, '10.0'
+#platform :ios, '13.0'
 
 target 'PayazaPod_Example' do
   pod 'PayazaPod', :path => '../'
+  pod 'Socket.IO-Client-Swift', '~> 16.1.0'
+  pod 'DropDown'
 
   target 'PayazaPod_Tests' do
     inherit! :search_paths

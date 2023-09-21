@@ -1,0 +1,6 @@
+framework module Pods_PayazaPod_Example {
+  umbrella header "Pods-PayazaPod_Example-umbrella.h"
+
+  export *
+  module * { export * }
+}

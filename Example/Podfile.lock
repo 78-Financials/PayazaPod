@@ -1,0 +1,33 @@
+PODS:
+  - DropDown (2.3.13)
+  - PayazaPod (0.1.0):
+    - DropDown
+    - Socket.IO-Client-Swift (~> 16.1.0)
+  - Socket.IO-Client-Swift (16.1.0):
+    - Starscream (~> 4.0.6)
+  - Starscream (4.0.6)
+
+DEPENDENCIES:
+  - DropDown
+  - PayazaPod (from `../`)
+  - Socket.IO-Client-Swift (~> 16.1.0)
+
+SPEC REPOS:
+  trunk:
+    - DropDown
+    - Socket.IO-Client-Swift
+    - Starscream
+
+EXTERNAL SOURCES:
+  PayazaPod:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  DropDown: 8a2116376c1981888557f72ec2ffc9a5e0e456ec
+  PayazaPod: 83cd1d791b4c8b597b40ed71ed65fd99aaec3a84
+  Socket.IO-Client-Swift: ee4b8f80a3db18dd7f32b266ddf273310609443c
+  Starscream: fb2c4510bebf908c62bd383bcf05e673720e91fd
+
+PODFILE CHECKSUM: a7853794a86c020b41c4ca4ea2da0705d191195e
+
+COCOAPODS: 1.12.1

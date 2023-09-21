@@ -1,0 +1,32 @@
+{
+  "name": "PayazaPod",
+  "version": "0.1.0",
+  "summary": "PayazSdk is the best iOS payment Sdk for ios devices",
+  "description": "PayAza ios Sdk aids in processing payment through the following channels: Cards,  Bank and Virtual Transfer",
+  "homepage": "https://github.com/78-Financials/PayazaPod",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "Xy-joe": "josephookoedo@gmail.com"
+  },
+  "source": {
+    "git": "https://github.com/78-Financials/PayazaPod.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "13.0"
+  },
+  "source_files": "PayazaPod/Classes/**/*",
+  "dependencies": {
+    "Socket.IO-Client-Swift": [
+      "~> 16.1.0"
+    ],
+    "DropDown": [
+
+    ]
+  },
+  "swift_versions": "5.0",
+  "swift_version": "5.0"
+}

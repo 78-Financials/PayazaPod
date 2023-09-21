@@ -1,0 +1,6 @@
+framework module Pods_PayazaPod_Tests {
+  umbrella header "Pods-PayazaPod_Tests-umbrella.h"
+
+  export *
+  module * { export * }
+}
