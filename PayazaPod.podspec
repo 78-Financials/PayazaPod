@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'PayazaPod'
-  s.version          = '0.1.3'
+  s.version          = '0.1.4'
   s.summary          = 'PayazSdk is the best iOS payment Sdk for ios devices'
 
   s.description      = 'PayAza ios Sdk aids in processing payment through the following channels: Cards,  Bank and Virtual Transfer'
@@ -21,7 +21,7 @@ Pod::Spec.new do |s|
    s.resource_bundles = {
      'PayazaPod' => ['PayazaPod/Assets/*.png']
    }
-  s.resources = 'PayAzaSDK/Assets/**/*.{png,jpeg,jpg,gif,storyboard,xib,xcassets}'
+  s.resources = 'PayazaPod/Assets/**/*.{png,jpeg,jpg,gif,storyboard,xib,xcassets}'
   s.dependency  "Socket.IO-Client-Swift", "~> 16.1.0"
   s.dependency  "DropDown"
   s.swift_versions = "5.0"
