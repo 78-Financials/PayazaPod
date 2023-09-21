@@ -2,12 +2,6 @@
 
 import UIKit
 
- protocol PayAzaCallback {
-    func onPaymentComplete() -> TransactionResponse?
-    func onPaymentFailed() -> String?
-}
-
-
 
 public protocol PayazaCallbackMethods {
     func onPaymentComplete(response: TransactionResponse)
@@ -17,22 +11,7 @@ public protocol PayazaCallbackMethods {
 }
 
 
-public protocol AudioManagerProtocol {
-    var callBacks: PayazaCallbackMethods { get }
-    
-    
-}
-
-
-public class PayazaManager : PayAzaCallback {
-   
-     func onPaymentComplete() -> TransactionResponse? {
-        return transactionResponse
-    }
-    
-    func onPaymentFailed() -> String? {
-        return errorMessage
-    }
+public class PayazaManager  {
     
     private var userMerchantKey: String?
     private var merchantInfo: UserInfo?
