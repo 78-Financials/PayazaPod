@@ -51,4 +51,14 @@ class ViewModelClass: ObservableObject {
 
         return true
     }
+    
+    func cardTypeValidator(cardField: UITextField){
+//        if let type = CreditCardValidator(number).type {
+//            print(type.name) // Visa, Mastercard, Amex etc.
+//        } else {
+//            // I Can't detect type of credit card
+//        }
+        
+        
+    }
 }

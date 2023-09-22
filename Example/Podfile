@@ -6,6 +6,7 @@ target 'PayazaPod_Example' do
   pod 'PayazaPod', :path => '../'
   pod 'Socket.IO-Client-Swift', '~> 16.1.0'
   pod 'DropDown'
+  pod "CreditCardValidator", '~> 0.5.3'
 
   target 'PayazaPod_Tests' do
     inherit! :search_paths

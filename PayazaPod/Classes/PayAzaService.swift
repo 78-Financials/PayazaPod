@@ -14,7 +14,7 @@ struct PayAzaService {
     var viewModel : ViewModelClass?
     var forStartUp : Bool = true
     var userInfo : UserInfo?
-    var transactionAmount: Int64?
+    var transactionAmount: Double?
     var socketIoManager : SocketIOManager?
     private var controllers = Controllers()
     
@@ -218,7 +218,7 @@ struct PayAzaService {
     func chargeCard(card : CardBody?, cardValues : CardDynamicDataValues, user: UserInfo) {
         var newRequest : URLRequest?
         newRequest = controllers.configureRequestHeader(baseUrl: Variables.BaseURLs.cardURl, connectionMethod: Variables.ConnectionMethod.post, merchantKey: merchantKey!)
-    
+        let roundedValue = round(transactionAmount! * 100) / 100.0
         
         let service_payloadData : [String: Any] = ["request_application": "Payaza",
                                                    "application_module": "USER_MODULE",
@@ -228,7 +228,7 @@ struct PayAzaService {
                                                    "last_name": user.last_name!,
                                                    "email_address": user.email_address!,
                                                    "phone_number": user.phone_number!,
-                                                   "amount": transactionAmount,
+                                                   "amount": roundedValue,
                                                    "transaction_reference": cardValues.transaction_reference!,
                                                    "currency": cardValues.currency!,
                                                    "description": cardValues.transactionDescription!,

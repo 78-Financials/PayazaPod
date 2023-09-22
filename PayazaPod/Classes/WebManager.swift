@@ -24,6 +24,7 @@ class WebManager: NSObject, WKNavigationDelegate {
     private var hasFinishedCalling: Bool?
     private var paymentViewModel = ViewModelClass()
     private var myWebview: WKWebView?
+    private var isLoading: Bool = false
     
     
     public override init () {
@@ -32,29 +33,37 @@ class WebManager: NSObject, WKNavigationDelegate {
     
     
     func configureWeb(htmlLink : String, baseUrl: String, mainView: UIView, delegateController: WebviewCallbackMethods) {
-        DispatchQueue.main.async {
-            let configuration = WKWebViewConfiguration()
-            self.myWebview = WKWebView(frame: mainView.bounds, configuration: configuration)
-            mainView.addSubview(self.myWebview!)
-            self.myWebview!.navigationDelegate = self
-            let url = NSURL(string: baseUrl)! as URL
-            self.myWebview!.loadHTMLString(htmlLink, baseURL: url)
-            self.myWebview!.allowsBackForwardNavigationGestures = true
-            self.paymentViewModel.hasServerErrror.observe{(data ) in
-                if data != nil {
-                    delegateController.onPaymentFailed(errorMessage: data!)
-                }
-            }
-            
-            self.paymentViewModel.threeDSResponse.observe{(data) in
-                if data != nil {
-                    if data! {
-                        delegateController.onPaymentComplete(response: true)
+        if !isLoading {
+            isLoading = true
+            DispatchQueue.main.async {
+                let configuration = WKWebViewConfiguration()
+                self.myWebview = WKWebView(frame: mainView.bounds, configuration: configuration)
+                mainView.addSubview(self.myWebview!)
+                let urll:URL? = URL(string: "http://www.apple.com")
+                self.myWebview!.navigationDelegate = self
+                let url = NSURL(string: baseUrl)! as URL
+              //  self.myWebview!.loadHTMLString(htmlLink, baseURL: url)
+                let request:URLRequest = URLRequest(url: urll!)
+                self.myWebview!.load(request)
+                self.myWebview!.allowsBackForwardNavigationGestures = true
+                self.paymentViewModel.hasServerErrror.observe{(data ) in
+                    if data != nil {
+                        delegateController.onPaymentFailed(errorMessage: data!)
                     }
-                    
+                }
+                
+                self.paymentViewModel.threeDSResponse.observe{(data) in
+                    if data != nil {
+                        if data! {
+                            delegateController.onPaymentComplete(response: true)
+                        }
+                        
+                    }
                 }
             }
         }
+            
+        
         
         
     }
@@ -132,6 +141,7 @@ class WebManager: NSObject, WKNavigationDelegate {
            if urlStr.contains("https://webhook.site/ed6dd427-dfcf-44a3-8fa7-4cc1ab55e029"){
                self.hasFinishedCalling = true
                self.myWebview?.isHidden = true
+               isLoading = false
             }
                         
        }

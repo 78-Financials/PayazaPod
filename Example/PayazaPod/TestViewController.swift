@@ -12,6 +12,7 @@ import PayazaPod
 class TestViewController: UIViewController, PayazaCallbackMethods {
     
     
+    @IBOutlet weak var merchantName: UITextField!
     @IBOutlet weak var fieldView: UIView!
     
     @IBOutlet weak var modeText: UILabel!
@@ -88,10 +89,15 @@ class TestViewController: UIViewController, PayazaCallbackMethods {
             return
         }
         
-        let transactionAmount: Int64? = Int64(amount.text!)
+        else if merchantName.text == nil || merchantName.text == "" {
+            showToast(message: "Invalid Merchant name", font: .systemFont(ofSize: 14))
+            return
+        }
+        
+        let transactionAmount: Double? = Double(amount.text!)
         
         
-        manager.PayAzaConfig(merchantKey: keyField.text!, firstname: firstName.text!, lastname: lastName.text!, email: emailAdreess.text!, phone: phone.text!, transactionRef: "buigbdghy9484", amount: transactionAmount!, isLive: isLive, baseUrl: baseUrl)
+        manager.PayAzaConfig(merchantKey: keyField.text!, merchantName: merchantName.text!, firstname: firstName.text!, lastname: lastName.text!, email: emailAdreess.text!, phone: phone.text!, transactionRef: "buigbdghy9484", amount: transactionAmount!, isLive: isLive, baseUrl: baseUrl)
         manager.payNow()
         
         

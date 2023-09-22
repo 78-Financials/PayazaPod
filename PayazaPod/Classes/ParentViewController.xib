@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -51,6 +51,7 @@
                 <outlet property="loader" destination="vPK-Mt-bF0" id="sCS-p9-mI4"/>
                 <outlet property="mainCardView" destination="x2L-1n-6If" id="PGL-yf-1FR"/>
                 <outlet property="mainView" destination="7Oc-Pf-rRk" id="5Ss-kX-iCY"/>
+                <outlet property="merchantName" destination="Yyv-hB-oJs" id="46i-Dn-obL"/>
                 <outlet property="nameStack" destination="kde-Vt-fLj" id="fJK-qy-5z7"/>
                 <outlet property="securedText" destination="Za5-TC-SJd" id="Tpb-ZK-ixA"/>
                 <outlet property="successOption" destination="UWe-f2-fNY" id="2lk-ff-nZD"/>
@@ -82,14 +83,14 @@
                             <rect key="frame" x="18" y="75" width="378" height="30"/>
                             <subviews>
                                 <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="1" translatesAutoresizingMaskIntoConstraints="NO" id="kUz-Hn-ofQ" userLabel="itemStack">
-                                    <rect key="frame" x="2" y="2" width="541" height="26"/>
+                                    <rect key="frame" x="2" y="2" width="358" height="26"/>
                                     <subviews>
                                         <stackView opaque="NO" contentMode="center" spacing="10" id="Tb0-kC-JYF">
-                                            <rect key="frame" x="0.0" y="0.0" width="270" height="26"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="178.5" height="26"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gz5-jM-gsB">
-                                                    <rect key="frame" x="0.0" y="0.0" width="270" height="26"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="178.5" height="26"/>
                                                     <state key="normal" title="Button"/>
                                                     <buttonConfiguration key="configuration" style="plain" image="transfer.png" imagePadding="10">
                                                         <attributedString key="attributedTitle">
@@ -109,13 +110,13 @@
                                             <viewLayoutGuide key="safeArea" id="1E6-Sl-dDn"/>
                                         </stackView>
                                         <stackView opaque="NO" contentMode="scaleToFill" id="U1E-Hd-Ps8">
-                                            <rect key="frame" x="271" y="0.0" width="270" height="26"/>
+                                            <rect key="frame" x="179.5" y="0.0" width="178.5" height="26"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fM6-TA-XBd">
-                                                    <rect key="frame" x="0.0" y="0.0" width="270" height="26"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="178.5" height="26"/>
                                                     <state key="normal" title="Button"/>
-                                                    <buttonConfiguration key="configuration" style="plain" image="creditcard.png" imagePadding="10">
+                                                    <buttonConfiguration key="configuration" style="plain" image="credit-card.png" imagePadding="10">
                                                         <preferredSymbolConfiguration key="preferredSymbolConfigurationForImage" configurationType="font" scale="small" weight="regular">
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                         </preferredSymbolConfiguration>
@@ -575,10 +576,7 @@
                                     <color key="backgroundColor" red="0.94367343189999997" green="0.99225538970000005" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </view>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="We’re waiting for confirmation from your bank. Kindly bear with us." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DHV-F5-A8w">
-                                    <rect key="frame" x="31" y="303" width="350" height="32.5"/>
-                                    <constraints>
-                                        <constraint firstAttribute="width" constant="350" id="e5g-o8-epx"/>
-                                    </constraints>
+                                    <rect key="frame" x="33" y="303" width="346" height="32.5"/>
                                     <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="14"/>
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
@@ -613,6 +611,9 @@
                                     <buttonConfiguration key="configuration" style="plain" title="Try again">
                                         <color key="baseForegroundColor" red="0.13556876779999999" green="0.34140682220000002" blue="0.82048749919999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </buttonConfiguration>
+                                    <connections>
+                                        <action selector="resultAction:" destination="-1" eventType="touchUpInside" id="RMX-AW-xxE"/>
+                                    </connections>
                                 </button>
                             </subviews>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -624,11 +625,13 @@
                                 <constraint firstItem="DHV-F5-A8w" firstAttribute="centerX" secondItem="3V2-Dv-SQ0" secondAttribute="centerX" id="Gcf-1X-lq0"/>
                                 <constraint firstAttribute="bottom" secondItem="PnD-Tu-96Q" secondAttribute="bottom" constant="30" id="N9g-75-opB"/>
                                 <constraint firstItem="rzU-G0-nuJ" firstAttribute="top" secondItem="owW-pG-9jG" secondAttribute="bottom" constant="30" id="PaF-uc-2HY"/>
+                                <constraint firstItem="DHV-F5-A8w" firstAttribute="leading" secondItem="3V2-Dv-SQ0" secondAttribute="leading" constant="33" id="QtL-5P-Xcf"/>
                                 <constraint firstItem="col-KA-ekn" firstAttribute="top" secondItem="DHV-F5-A8w" secondAttribute="bottom" constant="16" id="Xh2-U8-mUX"/>
                                 <constraint firstItem="PnD-Tu-96Q" firstAttribute="leading" secondItem="3V2-Dv-SQ0" secondAttribute="leading" constant="16" id="aeC-dP-vNC"/>
                                 <constraint firstItem="bdM-gM-lIx" firstAttribute="leading" secondItem="3V2-Dv-SQ0" secondAttribute="leading" constant="23" id="cpk-PA-OTm"/>
                                 <constraint firstItem="col-KA-ekn" firstAttribute="centerX" secondItem="3V2-Dv-SQ0" secondAttribute="centerX" id="h2q-on-Ozz"/>
                                 <constraint firstItem="owW-pG-9jG" firstAttribute="centerX" secondItem="3V2-Dv-SQ0" secondAttribute="centerX" id="hYE-d8-eaO"/>
+                                <constraint firstAttribute="trailing" secondItem="DHV-F5-A8w" secondAttribute="trailing" constant="33" id="nJX-oe-yrc"/>
                                 <constraint firstAttribute="trailing" secondItem="PnD-Tu-96Q" secondAttribute="trailing" constant="16" id="rWo-KV-r6a"/>
                                 <constraint firstItem="bdM-gM-lIx" firstAttribute="top" secondItem="3V2-Dv-SQ0" secondAttribute="top" constant="23" id="vHh-Io-6bd"/>
                                 <constraint firstItem="DHV-F5-A8w" firstAttribute="top" secondItem="rzU-G0-nuJ" secondAttribute="bottom" constant="40" id="xKm-lQ-fKo"/>
@@ -971,10 +974,10 @@
     </objects>
     <resources>
         <image name="card_loader.gif" width="500" height="500"/>
-        <image name="circle.circle" catalog="system" width="128" height="121"/>
-        <image name="circle.inset.filled" catalog="system" width="128" height="121"/>
+        <image name="circle.circle" catalog="system" width="128" height="123"/>
+        <image name="circle.inset.filled" catalog="system" width="128" height="123"/>
         <image name="copy.png" width="16" height="16"/>
-        <image name="creditcard.png" width="14" height="14"/>
+        <image name="credit-card.png" width="16" height="16"/>
         <image name="dropDown" width="5" height="3"/>
         <image name="lock.png" width="14" height="14"/>
         <image name="mastercard.png" width="24" height="15"/>

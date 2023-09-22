@@ -1,6 +1,7 @@
 PODS:
+  - CreditCardValidator (0.5.3)
   - DropDown (2.3.13)
-  - PayazaPod (0.1.0):
+  - PayazaPod (0.1.4):
     - DropDown
     - Socket.IO-Client-Swift (~> 16.1.0)
   - Socket.IO-Client-Swift (16.1.0):
@@ -8,12 +9,14 @@ PODS:
   - Starscream (4.0.6)
 
 DEPENDENCIES:
+  - CreditCardValidator (~> 0.5.3)
   - DropDown
   - PayazaPod (from `../`)
   - Socket.IO-Client-Swift (~> 16.1.0)
 
 SPEC REPOS:
   trunk:
+    - CreditCardValidator
     - DropDown
     - Socket.IO-Client-Swift
     - Starscream
@@ -23,11 +26,12 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
+  CreditCardValidator: 8306e89b1092e03a146c1bd40943cff09e816772
   DropDown: 8a2116376c1981888557f72ec2ffc9a5e0e456ec
-  PayazaPod: 83cd1d791b4c8b597b40ed71ed65fd99aaec3a84
+  PayazaPod: 98fb662ac63a896154dcf0ed22dd927e721efab9
   Socket.IO-Client-Swift: ee4b8f80a3db18dd7f32b266ddf273310609443c
   Starscream: fb2c4510bebf908c62bd383bcf05e673720e91fd
 
-PODFILE CHECKSUM: a7853794a86c020b41c4ca4ea2da0705d191195e
+PODFILE CHECKSUM: a0648a486942729f7a7a798d964cb22a99693ff9
 
 COCOAPODS: 1.12.1
