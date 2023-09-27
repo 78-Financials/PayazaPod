@@ -19,23 +19,25 @@ public class PayazaManager  {
     private var viewModelCalss = ViewModelClass()
     private var transactionResponse : TransactionResponse?
     private var errorMessage: String?
-     var externalListener = ViewModelClass()
+    private var externalListener = ViewModelClass()
     private var vc: UIViewController?
     private var connectionMode : String?
     private var baseUrl : String?
     private var merchantName: String? = "Test Merchant"
+    private var currency: String?
 
     
     public init () {
        
     }
     
-    public func PayAzaConfig(merchantKey : String, merchantName: String, firstname: String, lastname: String, email: String, phone: String, transactionRef: String, amount: Double, isLive: Bool, baseUrl: String){
+    public func PayAzaConfig(merchantKey : String, merchantName: String, currency: String ,firstname: String, lastname: String, email: String, phone: String, transactionRef: String, amount: Double, isLive: Bool, baseUrl: String){
         let userInfo = UserInfo(first_name: firstname, last_name: lastname, email_address: email, phone_number: phone, transactionRef: transactionRef)
           userMerchantKey = merchantKey
           merchantInfo = userInfo
         transactionAmount =  amount
         self.merchantName = merchantName
+        self.currency = currency.uppercased()
         self.baseUrl = baseUrl
         if isLive == true{
             connectionMode = Variables.status.live
@@ -73,6 +75,7 @@ public class PayazaManager  {
             mainVC.connectionMode = connectionMode
             mainVC.baseUrl = baseUrl
             mainVC.merchantNameString = self.merchantName
+            mainVC.currency = currency
             self.vc?.overrideUserInterfaceStyle = .light
             self.vc?.present(mainVC, animated: true, completion: nil)
         }

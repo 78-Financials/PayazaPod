@@ -50,6 +50,7 @@ class TestViewController: UIViewController, PayazaCallbackMethods {
         phone.text = "986755768"
         amount.text = "1"
         
+        
         fieldView.isUserInteractionEnabled = true
         let tapAction = UITapGestureRecognizer(target: self, action: #selector(closeKeyboard))
            fieldView.addGestureRecognizer(tapAction)
@@ -97,7 +98,7 @@ class TestViewController: UIViewController, PayazaCallbackMethods {
         let transactionAmount: Double? = Double(amount.text!)
         
         
-        manager.PayAzaConfig(merchantKey: keyField.text!, merchantName: merchantName.text!, firstname: firstName.text!, lastname: lastName.text!, email: emailAdreess.text!, phone: phone.text!, transactionRef: "buigbdghy9484", amount: transactionAmount!, isLive: isLive, baseUrl: baseUrl)
+        manager.PayAzaConfig(merchantKey: keyField.text!, merchantName: merchantName.text!, currency: "USD", firstname: firstName.text!, lastname: lastName.text!, email: emailAdreess.text!, phone: phone.text!, transactionRef: "buigbdghy9484", amount: transactionAmount!, isLive: isLive, baseUrl: baseUrl)
         manager.payNow()
         
         

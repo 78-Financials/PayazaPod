@@ -240,6 +240,7 @@ class ParentViewController: UIViewController, WKNavigationDelegate{
         userName.attributedText = billedToString
         userEmail.text = userinfo?.email_address
         backUpUserdetails = userinfo
+        merchantName.text = merchantNameString
         
         
         controllers.setUpViewBorderAndColor(theView: cardNumBg, theColor: controllers.hexStringToUIColor(hex: "#E6E7EC"), borderWidth: 0.5)
@@ -613,13 +614,15 @@ override func viewWillDisappear(_ animated: Bool) {
         mainView.isHidden = false
         
         
-        let str = Variables.Constants.naira + String(amount!)
+        let str = currency! + String(amount!)
         let labelFont = UIFont(name: "HelveticaNeue-Bold", size: 14)
         let attrs : Dictionary = [NSAttributedString.Key.foregroundColor : controllers.hexStringToUIColor(hex: Variables.Colors.fontBlue), NSAttributedString.Key.font : labelFont]
         let attributedStr = NSMutableAttributedString(string:str, attributes:attrs as [NSAttributedString.Key : Any])
         let firNormalString = NSMutableAttributedString(string:Variables.Constants.cardHintFirstPart)
+        let namePart = NSMutableAttributedString(string:" to \(merchantNameString!),")
         let secNormalString = NSMutableAttributedString(string:Variables.Constants.cardHintSecondPart)
         firNormalString.append(attributedStr)
+        firNormalString.append(namePart)
         firNormalString.append(secNormalString)
         cardAmount.attributedText =  firNormalString
         
@@ -1002,6 +1005,7 @@ extension ParentViewController: UITextFieldDelegate {
         }
         if textField == cardNum {
             controllers.setUpViewBorderAndColor(theView: cardNumBg, theColor: .lightGray, borderWidth: 0.5)
+            self.controllers.getCardType(cardNumber: cardNum.text!, cardImageView: self.cardTypeIcon, vc: self)
         }
         return true
     }
@@ -1029,7 +1033,11 @@ extension ParentViewController: UITextFieldDelegate {
     
     func textFieldDidEndEditing(_ textField: UITextField, reason: UITextField.DidEndEditingReason) {
         if textField == accountNumberField {
+            self.controllers.getCardType(cardNumber: accountNumberField.text!, cardImageView: self.cardTypeIcon, vc: self)
             accountNumberField.resignFirstResponder()
+        }
+        if textField == cardNum {
+            self.controllers.getCardType(cardNumber: cardNum.text!, cardImageView: self.cardTypeIcon, vc: self)
         }
     }
     

@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'PayazaPod'
-  s.version          = '0.1.5'
+  s.version          = '0.1.6'
   s.summary          = 'PayazSdk is the best iOS payment Sdk for ios devices'
 
   s.description      = 'PayAza ios Sdk aids in processing payment through the following channels: Cards,  Bank and Virtual Transfer'

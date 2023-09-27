@@ -34,7 +34,7 @@ struct Variables {
     struct Constants {
         static let naira: String = "₦"
         static let cardHintFirstPart: String = "To continue with your payment of "
-        static let cardHintSecondPart = " to Glassdoor Inc, kindly enter your card details below"
+        static let cardHintSecondPart = " kindly enter your card details below"
     }
     
     struct ConnectionMethod {

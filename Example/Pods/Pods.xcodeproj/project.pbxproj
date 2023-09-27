@@ -54,6 +54,17 @@
 		74012B832FAF67F8D62A2B27CDAFE8B5 /* DPDConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89543F44DC4247A520ABC50C4324295D /* DPDConstants.swift */; };
 		75117FDCE6D7B58CEA615D30EFEAE3EB /* HTTPHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6474C92BCAA39816F5B09B7934DE9C52 /* HTTPHandler.swift */; };
 		77073CEE2ABDFCC400156293 /* mastercard.png in Resources */ = {isa = PBXBuildFile; fileRef = 77073CED2ABDFCC400156293 /* mastercard.png */; };
+		77073CF02AC35AE500156293 /* CardValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77073CEF2AC35AE500156293 /* CardValidator.swift */; };
+		77073D002AC3636A00156293 /* dci.png in Resources */ = {isa = PBXBuildFile; fileRef = 77073CFF2AC3636A00156293 /* dci.png */; };
+		77073D012AC3636A00156293 /* dci.png in Resources */ = {isa = PBXBuildFile; fileRef = 77073CFF2AC3636A00156293 /* dci.png */; };
+		77073D062AC3642B00156293 /* others.png in Resources */ = {isa = PBXBuildFile; fileRef = 77073D022AC3642A00156293 /* others.png */; };
+		77073D072AC3642B00156293 /* others.png in Resources */ = {isa = PBXBuildFile; fileRef = 77073D022AC3642A00156293 /* others.png */; };
+		77073D082AC3642B00156293 /* amex.png in Resources */ = {isa = PBXBuildFile; fileRef = 77073D032AC3642A00156293 /* amex.png */; };
+		77073D092AC3642B00156293 /* amex.png in Resources */ = {isa = PBXBuildFile; fileRef = 77073D032AC3642A00156293 /* amex.png */; };
+		77073D0A2AC3642B00156293 /* visa.png in Resources */ = {isa = PBXBuildFile; fileRef = 77073D042AC3642B00156293 /* visa.png */; };
+		77073D0B2AC3642B00156293 /* visa.png in Resources */ = {isa = PBXBuildFile; fileRef = 77073D042AC3642B00156293 /* visa.png */; };
+		77073D0C2AC3642B00156293 /* maestro.png in Resources */ = {isa = PBXBuildFile; fileRef = 77073D052AC3642B00156293 /* maestro.png */; };
+		77073D0D2AC3642B00156293 /* maestro.png in Resources */ = {isa = PBXBuildFile; fileRef = 77073D052AC3642B00156293 /* maestro.png */; };
 		791D39FF14E0B2F1C74CC5C75CCF76BF /* Data+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6799DC83F5701B1E04E22A4D06EB9ABB /* Data+Extensions.swift */; };
 		7D65B0218352A58A7B446F1059FBBA8A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
 		7DC21AEF4DF391376D8D953709FCCBD5 /* ParentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB8A09FB0A247651DF653B032305419 /* ParentViewController.swift */; };
@@ -265,7 +276,13 @@
 		74D37ACD11720D0B1713A8C9BAF4EFB9 /* DropDown-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "DropDown-prefix.pch"; sourceTree = "<group>"; };
 		763F11EE56E5C4707D9682055761CCE3 /* TCPTransport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TCPTransport.swift; path = Sources/Transport/TCPTransport.swift; sourceTree = "<group>"; };
 		76879C4D9883BFE86F0873A865FA1C13 /* Pods-PayazaPod_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-PayazaPod_Example.debug.xcconfig"; sourceTree = "<group>"; };
-		77073CED2ABDFCC400156293 /* mastercard.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = mastercard.png; path = ../../../Downloads/mastercard.png; sourceTree = "<group>"; };
+		77073CED2ABDFCC400156293 /* mastercard.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = mastercard.png; path = PayazaPod/Assets/mastercard.png; sourceTree = "<group>"; };
+		77073CEF2AC35AE500156293 /* CardValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CardValidator.swift; path = PayazaPod/Classes/CardValidator.swift; sourceTree = "<group>"; };
+		77073CFF2AC3636A00156293 /* dci.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = dci.png; path = PayazaPod/Assets/dci.png; sourceTree = "<group>"; };
+		77073D022AC3642A00156293 /* others.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = others.png; path = PayazaPod/Assets/others.png; sourceTree = "<group>"; };
+		77073D032AC3642A00156293 /* amex.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = amex.png; path = PayazaPod/Assets/amex.png; sourceTree = "<group>"; };
+		77073D042AC3642B00156293 /* visa.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = visa.png; path = PayazaPod/Assets/visa.png; sourceTree = "<group>"; };
+		77073D052AC3642B00156293 /* maestro.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = maestro.png; path = PayazaPod/Assets/maestro.png; sourceTree = "<group>"; };
 		7815C9B1CD101AF102EF2BE9D7E23A40 /* CreditCardValidator.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = CreditCardValidator.debug.xcconfig; sourceTree = "<group>"; };
 		79419F83A849A845CDDAD52486C83627 /* Models.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Models.swift; path = PayazaPod/Classes/Models.swift; sourceTree = "<group>"; };
 		79ABECF28043028196ED1FE3C9F65305 /* PayAzaService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PayAzaService.swift; path = PayazaPod/Classes/PayAzaService.swift; sourceTree = "<group>"; };
@@ -417,6 +434,11 @@
 		063C0E32FF7353E408D84125D3BE5663 /* PayazaPod */ = {
 			isa = PBXGroup;
 			children = (
+				77073D032AC3642A00156293 /* amex.png */,
+				77073D052AC3642B00156293 /* maestro.png */,
+				77073D022AC3642A00156293 /* others.png */,
+				77073D042AC3642B00156293 /* visa.png */,
+				77073CFF2AC3636A00156293 /* dci.png */,
 				77073CED2ABDFCC400156293 /* mastercard.png */,
 				43E90A0B0568CE6FDA8CEB457A7AD975 /* awaiticon.png */,
 				BD942A31C3B246B3ACA9D56D79115BBE /* bank.png */,
@@ -447,6 +469,7 @@
 				A8FA1CEE575C8F98A3D83DD7299D4650 /* WebManager.swift */,
 				5392514CF35D2389934D1512FEEDAC92 /* Pod */,
 				338838D2F6CB292B38AE42555E620448 /* Support Files */,
+				77073CEF2AC35AE500156293 /* CardValidator.swift */,
 			);
 			name = PayazaPod;
 			path = ../..;
@@ -1004,7 +1027,10 @@
 			files = (
 				EA6D987F804330C752693585727B60A3 /* awaiticon.png in Resources */,
 				7ECE78C1CF552367B5AA4196A8F6EAD3 /* bank.png in Resources */,
+				77073D0B2AC3642B00156293 /* visa.png in Resources */,
+				77073D072AC3642B00156293 /* others.png in Resources */,
 				A732EF0E7179B42615E8E0B38308DBB8 /* cancel.png in Resources */,
+				77073D012AC3636A00156293 /* dci.png in Resources */,
 				3532B3B81F4C694BF9D5EE99AC462F30 /* checked.png in Resources */,
 				4AFD7640AC61CF0026B1B6C1C597A2AC /* close.png in Resources */,
 				E6C4DC703AA8DAD81C5C3B8D21674AF9 /* copy.png in Resources */,
@@ -1012,6 +1038,8 @@
 				B5B8DA568024889815638FB6E6D8A4D3 /* credit_card_dark.png in Resources */,
 				F82F9FDB0D6810CD3820FEA4AC9647DE /* dropdown.png in Resources */,
 				A51AED73CDAF5060EDB6BCF0F4199E32 /* lock.png in Resources */,
+				77073D0D2AC3642B00156293 /* maestro.png in Resources */,
+				77073D092AC3642B00156293 /* amex.png in Resources */,
 				BF5876253E939005B64B6B9868DA3325 /* newbank.png in Resources */,
 				50802882A045E89C1729765256842380 /* path16.png in Resources */,
 				0BF219D165F122BBE35EE7ECFE537082 /* refres.png in Resources */,
@@ -1037,11 +1065,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				77073D002AC3636A00156293 /* dci.png in Resources */,
 				921730CDD8C0AFCB20759B3E89A66BFC /* awaiticon.png in Resources */,
 				C4EF06CBC7F9B6706E24F24127511E74 /* bank.png in Resources */,
 				CB9AF30DE4202CBE0BE8BF29F168FE8A /* cancel.png in Resources */,
 				B54A65F3CDF82F3A5385415D1E7344B1 /* card_loader.gif in Resources */,
 				1938D756591CE8249B8679EC8CC80FFD /* checked.png in Resources */,
+				77073D082AC3642B00156293 /* amex.png in Resources */,
 				7FA72BD0CCB4D0C62D854DC83716B2E4 /* close.png in Resources */,
 				5E7C1287F2945FB8494040E2AFDD8ED0 /* copy.png in Resources */,
 				77073CEE2ABDFCC400156293 /* mastercard.png in Resources */,
@@ -1051,9 +1081,12 @@
 				A8A930C2F433C4E32F171AAE002ADBD2 /* lock.png in Resources */,
 				C9CB43FFE5D194ACA291DC3598CBE175 /* newbank.png in Resources */,
 				03C933935CDE96C28AAC675E0E6ADBF6 /* path16.png in Resources */,
+				77073D062AC3642B00156293 /* others.png in Resources */,
+				77073D0A2AC3642B00156293 /* visa.png in Resources */,
 				F136A8AD6ACEEEFCA5EE79FCC1F292B8 /* PayazaPod-PayazaPod in Resources */,
 				9E00BA15E635A648E64388636A6CE649 /* refres.png in Resources */,
 				70C713F675B4617B51334F2D7BB55161 /* transfer.png in Resources */,
+				77073D0C2AC3642B00156293 /* maestro.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1081,6 +1114,7 @@
 			files = (
 				E1F9A0E73D77E7DFCF5A8B5859402EBC /* Controllers.swift in Sources */,
 				594E1AB72D79FEF76A0D97A0A2439E1A /* Extensions.swift in Sources */,
+				77073CF02AC35AE500156293 /* CardValidator.swift in Sources */,
 				80DD3733C2A02B9CECE20D2228EAC449 /* LiveData.swift in Sources */,
 				7280F77F5917CCBBD29FB99C18F75252 /* Models.swift in Sources */,
 				7DC21AEF4DF391376D8D953709FCCBD5 /* ParentViewController.swift in Sources */,

@@ -196,5 +196,31 @@ class Controllers {
         let currentDate = formatter3.string(from: date)
         return currentDate
     }
+    
+    func getCardType(cardNumber: String, cardImageView: UIImageView, vc: UIViewController) {
+     if let type = CreditCardValidator(cardNumber).type {
+         switch type.name {
+         case "Amex":
+             setImage(imageName: "amex", imaveView: cardImageView)
+         case "Visa":
+             setImage(imageName: "visa", imaveView: cardImageView)
+         case "MasterCard":
+             setImage(imageName: "mastercard", imaveView: cardImageView)
+         case "Maestro":
+             setImage(imageName: "maestro", imaveView: cardImageView)
+         default:
+             setImage(imageName: "others", imaveView: cardImageView)
+         } // Visa, Mastercard, Amex etc.
+     } else {
+         vc.showToast(message: "Invalid Card", font: .systemFont(ofSize: 12))// I Can't detect type of credit card
+     }
+    }
 }
 
+
+
+private func setImage(imageName: String, imaveView: UIImageView){
+    let mainBundle = Bundle(for: ParentViewController.self)
+    let origImage = UIImage(named: imageName, in: mainBundle, compatibleWith: nil)
+    imaveView.image = origImage
+}
