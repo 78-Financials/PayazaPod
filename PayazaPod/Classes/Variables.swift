@@ -45,10 +45,10 @@ struct Variables {
     }
     
     struct BaseURLs {
-        static let fundURL : String = "https://router-live.78financials.com/api/request/secure/payloadhandler"
         static let socketURL : String = "https://socket-dev.payaza.africa/"
         static let socketLiveURL : String = "https://socket.payaza.africa/"
         static let cardURl : String =  "https://cards-live.78financials.com/card_charge/"
+        static let chargeCardUrl: String = "https://cards-live.78financials.com/card_charge/"
     }
     
     struct ActionKeys {
@@ -63,8 +63,6 @@ struct Variables {
         static let invalidCardDate : String = "Enter a valid card date"
         static let invalidCardCvv: String = "Enter a valid card cvv"
     }
-    
-    
 }
 
 

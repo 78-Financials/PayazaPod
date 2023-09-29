@@ -159,7 +159,7 @@ class ParentViewController: UIViewController, WKNavigationDelegate{
     var connectionMode : String?
     var amount: Double?
     var baseUrl : String?
-    var currency : String? = "USD"
+    var currency : String?
     var merchantNameString: String?
     private var deviceInfo : DeviceInfo?
     private var currentBackgroundDate : TimeInterval?
@@ -740,12 +740,12 @@ func showLoader(){
     awaitingview.isHidden = false
     transferView.isHidden = true
     bankView.isHidden = true
-    awaitTimer.isHidden = false
+    awaitTimer.isHidden = true
     awaitTitle.textColor = controllers.hexStringToUIColor(hex: Variables.Colors.orangeColor)
     awaitTitle.text = Variables.status.awaitingConfirm
     awaitViewDescrib.text = Variables.status.awaitingMessage
     self.forConfirmation = true
-    self.startCountdown()
+   // self.startCountdown()
     }
     
     // Await view, A this time, there is a network request
@@ -796,11 +796,11 @@ func showLoader(){
     
     func startCountdown(){
         if forConfirmation == true {
-            count = 120
+           // count = 120
         }else{
             count = 1800
         }
-        isCounting = true
+        isCounting = false
         myTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(myUpdate), userInfo: nil, repeats: true)
 
     }
@@ -1005,7 +1005,13 @@ extension ParentViewController: UITextFieldDelegate {
         }
         if textField == cardNum {
             controllers.setUpViewBorderAndColor(theView: cardNumBg, theColor: .lightGray, borderWidth: 0.5)
-            self.controllers.getCardType(cardNumber: cardNum.text!, cardImageView: self.cardTypeIcon, vc: self)
+            if cardNum.text != ""{
+                self.controllers.getCardType(cardNumber: cardNum.text!, cardImageView: self.cardTypeIcon, vc: self)
+            }else{
+                self.controllers.setImage(imageName: "others", imaveView: self.cardTypeIcon)
+            }
+            
+            
         }
         return true
     }
@@ -1037,7 +1043,12 @@ extension ParentViewController: UITextFieldDelegate {
             accountNumberField.resignFirstResponder()
         }
         if textField == cardNum {
-            self.controllers.getCardType(cardNumber: cardNum.text!, cardImageView: self.cardTypeIcon, vc: self)
+            if cardNum.text != ""{
+                self.controllers.getCardType(cardNumber: cardNum.text!, cardImageView: self.cardTypeIcon, vc: self)
+            }else{
+                self.controllers.setImage(imageName: "others", imaveView: self.cardTypeIcon)
+            }
+            
         }
     }
     

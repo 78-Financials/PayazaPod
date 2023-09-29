@@ -159,65 +159,10 @@ struct PayAzaService {
 }
     
     
-    func fundVirtualAccountService() {
-        var newRequest : URLRequest?
-        newRequest = controllers.configureRequestHeader(baseUrl: baseUrl!, connectionMethod: Variables.ConnectionMethod.post, merchantKey: Variables.ActionKeys.testFundKey)
-        
-        let service_payloadData : [String: Any] = ["request_application": "Payaza",
-                        "request_class": "MerchantFundTestVirtualAccount",
-                        "application_module": "USER_MODULE",
-                        "application_version": "1.0.0",
-                        "account_number": "9916535853",
-                        "initiation_transaction_reference": " DOVPORT1234QWE1",
-                        "transaction_amount": 12000,
-                        "currency": "NGN",
-                        "source_account_number": "4859693408",
-                        "source_account_name": "John Doe",
-                        "source_bank_name": "Eastern Bank"]
-        
-        let body : [String: Any] = [
-            "service_type": "Account",
-            "service_payload": service_payloadData,
-        ]
-        
-        do {
-                    newRequest?.httpBody =  try JSONSerialization.data(withJSONObject: body, options: [])
-                } catch let error {
-                    print("An error occured while parsing the bodyinto json, error", error)
-        }
-        
-        let session = URLSession.shared
-        let task = session.dataTask(with: newRequest!, completionHandler: { data, response, error -> Void in
-//            print(response!)
-            if data != nil {
-                do {
-                    let json = try JSONSerialization.jsonObject(with: data!) as! Dictionary<String, AnyObject>
-                  
-                    let responseContent = json["response_content"]
-                    if responseContent != nil {
-                        print(responseContent)
-                    }else {
-                        let responseServerMessage  = json["response_message"] as? String
-                        print(responseServerMessage)
-                    }
-                    
-                    
-                } catch {
-                    print("error")
-                }
-            }else {
-                print("Turn On Internet Connections")
-                viewModel!.hasServerErrror.value = Variables.status.connectionError
-            }
-            
-        })
-        task.resume()
-        
-    }
     
     func chargeCard(card : CardBody?, cardValues : CardDynamicDataValues, user: UserInfo) {
         var newRequest : URLRequest?
-        newRequest = controllers.configureRequestHeader(baseUrl: Variables.BaseURLs.cardURl, connectionMethod: Variables.ConnectionMethod.post, merchantKey: merchantKey!)
+        newRequest = controllers.configureRequestHeader(baseUrl: Variables.BaseURLs.chargeCardUrl, connectionMethod: Variables.ConnectionMethod.post, merchantKey: merchantKey!)
         let roundedValue = round(transactionAmount! * 100) / 100.0
         
         let service_payloadData : [String: Any] = ["request_application": "Payaza",
