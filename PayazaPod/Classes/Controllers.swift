@@ -211,10 +211,10 @@ class Controllers {
             case "Maestro":
                 setImage(imageName: "verve", imaveView: cardImageView)
             default:
-                setImage(imageName: "others", imaveView: cardImageView)
+                setImage(imageName: "", imaveView: cardImageView)
             } // Visa, Mastercard, Amex etc.
         } else {
-            setImage(imageName: "others", imaveView: cardImageView)
+            setImage(imageName: "", imaveView: cardImageView)
             vc.showToast(message: "Enter a valid Card", font: .systemFont(ofSize: 12))// I Can't detect type of credit card
         }
     }

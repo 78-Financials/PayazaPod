@@ -176,8 +176,7 @@ class ParentViewController: UIViewController, WKNavigationDelegate{
     private var errorResponse: String?
     private var forCard: Bool = false
     let configuration = WKWebViewConfiguration()
-    
-    
+    private var isAppActive : Bool? = false
     
     private var myWebview: WKWebView?
     private var isLoading: Bool = false
@@ -188,8 +187,7 @@ class ParentViewController: UIViewController, WKNavigationDelegate{
         super.viewDidLoad()
         self.overrideUserInterfaceStyle = .light
         loader.isHidden = false
-    
-        
+
         copyIcon.isUserInteractionEnabled = true
         let copyTap = UITapGestureRecognizer(target: self, action: #selector(copyAction))
         copyIcon.addGestureRecognizer(copyTap)
@@ -263,6 +261,8 @@ class ParentViewController: UIViewController, WKNavigationDelegate{
         launchPayAza()
         
     }
+    
+    
 
 @objc func handleTap(){
     if  cardNum.isFirstResponder {
@@ -458,6 +458,9 @@ func configureWeb(htmlLink : String, baseUrl: String) {
 
     
 override func viewWillDisappear(_ animated: Bool) {
+    if animated {
+        isAppActive = false
+    }
     if serverError != nil {
         viewModel?.serverError.value = serverError
     }else{
@@ -470,6 +473,7 @@ override func viewWillDisappear(_ animated: Bool) {
         }
        
     }
+    
 }
 
     private func configureViews(){
@@ -488,9 +492,6 @@ override func viewWillDisappear(_ animated: Bool) {
         transferView.isUserInteractionEnabled = true
         let tap0 = UITapGestureRecognizer(target: self, action: #selector(handleTap))
         transferView.addGestureRecognizer(tap0)
-        bankView.isUserInteractionEnabled = true
-        let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
-        bankView.addGestureRecognizer(tap)
         
         view.isUserInteractionEnabled = true
         let tap2 = UITapGestureRecognizer(target: self, action: #selector(handleTap))
@@ -526,8 +527,12 @@ override func viewWillDisappear(_ animated: Bool) {
         view.addGestureRecognizer(tap2)
         socketIoManager.viewModel = viewModel
         handleTap()
+        if currency! == "NGN"{
+            transferOption()
+        }else{
+            cardOption()
+        }
         
-        transferOption()
      }
 
 
@@ -574,7 +579,11 @@ override func viewWillDisappear(_ animated: Bool) {
                 mainView.isHidden = false
                 confirmationButton.isHidden = false
                 forBankPayment = false
-                startCountdown()
+                if !isAppActive!{
+                    isAppActive = true
+                    startCountdown()
+                }
+               
                 confirmationButton.setTitle("I've sent the money", for: .normal)
                 
             }else {
@@ -599,7 +608,12 @@ override func viewWillDisappear(_ animated: Bool) {
 
 
 @IBAction func transferSelected(_ sender: Any) {
-    transferOption()
+    if currency! == "NGN"{
+        transferOption()
+    }else {
+        self.showToast(message: "Not available for the currency used", font: .systemFont(ofSize: 13))
+    }
+   
 }
 
 
@@ -781,7 +795,6 @@ func showLoader(){
     }else{
         showFaiilure()
     }
-    
 }
 
     
@@ -935,13 +948,10 @@ func stop(){
         
        
     }
-    
-// Prefill test Cards
-func prefillCards() {
-    
-}
+
 
 func onDismiss() {
+    isAppActive = false
     navigationController?.popViewController(animated: true)
 }
 
@@ -1042,14 +1052,12 @@ extension ParentViewController: UITextFieldDelegate {
             self.controllers.getCardType(cardNumber: accountNumberField.text!, cardImageView: self.cardTypeIcon, vc: self)
             accountNumberField.resignFirstResponder()
         }
-        if textField == cardNum {
-            if cardNum.text != ""{
-                self.controllers.getCardType(cardNumber: cardNum.text!, cardImageView: self.cardTypeIcon, vc: self)
-            }else{
-                self.controllers.setImage(imageName: "others", imaveView: self.cardTypeIcon)
-            }
-            
-        }
+//        if textField == cardNum {
+//            if cardNum.text != ""{
+//                self.controllers.getCardType(cardNumber: cardNum.text!, cardImageView: self.cardTypeIcon, vc: self)
+//            }
+//            
+//        }
     }
     
     
@@ -1058,13 +1066,20 @@ extension ParentViewController: UITextFieldDelegate {
         if textField == cardNum {
             // get the current text, or use an empty string if that failed
             let currentText = textField.text ?? ""
-
+           
             // attempt to read the range they are trying to change, or exit if we can't
             guard let stringRange = Range(range, in: currentText) else { return false }
 
             // add their new text to the existing text
             let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
-
+//            if updatedText == ""{
+//                controllers.setImage(imageName: "", imaveView: self.cardTypeIcon)
+//            }
+            if updatedText.count == 16 {
+                self.controllers.getCardType(cardNumber: updatedText, cardImageView: self.cardTypeIcon, vc: self)
+            }else{
+                controllers.setImage(imageName: "", imaveView: self.cardTypeIcon)
+            }
             // make sure the result is under 16 characters
             return updatedText.count <= 16
         }
