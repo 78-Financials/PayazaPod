@@ -219,15 +219,6 @@ struct PayAzaService {
         }
     
 }
-
-
-
-//        "expiryMonth": "03",
-//        "expiryYear": "26",
-//        "securityCode": "431",
-//        "cardNumber": "5369020002180331"
-//
-       
         
     
-
+//urlStr    String    "https://cards-live.78financials.com/card_charge/process3DS"    

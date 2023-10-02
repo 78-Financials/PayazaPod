@@ -168,7 +168,7 @@ class ParentViewController: UIViewController, WKNavigationDelegate{
     private var cardBody : CardBody?
     private var chargeCardResponse : ChargeCardResponse?
     private var paymentInProgress: Bool = false
-    private var callbackUrl: String? = "https://webhook.site/ed6dd427-dfcf-44a3-8fa7-4cc1ab55e029"
+    private var callbackUrl: String? = "https://payaza.africa/"
     var transactionDescription: String? = "Test transaction"
     private var backUpUserdetails : UserInfo?
     private var transactionReference: String?
@@ -360,7 +360,7 @@ func configureWeb(htmlLink : String, baseUrl: String) {
      
      func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: (WKNavigationActionPolicy) -> Void) {
          if let urlStr = navigationAction.request.url?.absoluteString{
-            if urlStr.contains("https://webhook.site/ed6dd427-dfcf-44a3-8fa7-4cc1ab55e029"){
+            if urlStr.contains("https://cards-live.78financials.com/card_charge/process3DS"){
                 self.hasFinishedCalling = true
                 self.myWebview?.isHidden = true
                 isLoading = false
@@ -379,6 +379,10 @@ func configureWeb(htmlLink : String, baseUrl: String) {
        if let httpResponse = navigationResponse.response as? HTTPURLResponse {
            
            let statusCode = httpResponse.statusCode
+           if statusCode == 200 {
+              print(statusCode)
+           }
+           
            
            if let urlResponse = navigationResponse.response as? URLResponse {
                URLSession.shared.dataTask(with: urlResponse.url!) { (data, response, error) in
@@ -387,7 +391,7 @@ func configureWeb(htmlLink : String, baseUrl: String) {
                        if self.hasFinishedCalling != nil {
                            if let responseBody = String(data: data, encoding: .utf8) {
                                if  responseBody != "" {
-                                
+
                                    if let jsonData = responseBody.data(using: .utf8) {
                                        do {
                                            if let jsonArray = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any] {
@@ -396,28 +400,29 @@ func configureWeb(htmlLink : String, baseUrl: String) {
                                                        self.paymentViewModel.threeDSResponse.value = false
                                                        if let error = jsonArray["error"] as? String {
                                                            self.paymentViewModel.hasServerErrror.value = error
-                                                          
+
                                                        }
-                                                       
+
                                                    }else{
                                                        self.paymentViewModel.threeDSResponse.value = true
-                                                       
+
                                                    }
-                                                 
-                                                   
+
+
                                                }
-                                               
+
                                            } } catch {
                                                        print("Error parsing JSON: \(error.localizedDescription)") } } }
-                                               
-                                        
-                               
+
+
+
                            }
                        }
-                      
+
                    }
                }.resume()
            }
+
        }
            
        
@@ -655,37 +660,40 @@ override func viewWillDisappear(_ animated: Bool) {
     func showSucess(){
         let mainBundle = Bundle(for: ParentViewController.self)
         let origImage = UIImage(named: "checked", in: mainBundle, compatibleWith: nil)
-        awaitIcon.image = origImage
-        awaitTimer.isHidden = true
-        let emptyImage = UIImage(named: "")
-        awaitTitle.text = Variables.status.successfulTransaction
-        if chargeCardResponse != nil {
-            if chargeCardResponse!.transactionReference != nil {
-                awaitViewDescrib.text = Variables.status.successfulTransactionDescription + transactionReference!
-            }else{
-                awaitViewDescrib.text = Variables.status.successfulTransactionDescription + chargeCardResponse!.debugMessage!
+        DispatchQueue.main.async {
+            self.awaitIcon.image = origImage
+            self.awaitTimer.isHidden = true
+            let emptyImage = UIImage(named: "")
+            self.awaitTitle.text = Variables.status.successfulTransaction
+            if self.chargeCardResponse != nil {
+                if self.chargeCardResponse!.transactionReference != nil {
+                    self.awaitViewDescrib.text = Variables.status.successfulTransactionDescription + self.transactionReference!
+                }else{
+                    self.awaitViewDescrib.text = Variables.status.successfulTransactionDescription + self.chargeCardResponse!.debugMessage!
+                }
+               
+            } else {
+                if self.finalResponse != nil {
+                    self.awaitViewDescrib.text = Variables.status.successfulTransactionDescription + self.finalResponse!.reference!
+                }else{
+                    self.awaitViewDescrib.text = Variables.status.successfulTransactionDescription
+                }
             }
            
-        } else {
-            if finalResponse != nil {
-                awaitViewDescrib.text = Variables.status.successfulTransactionDescription + finalResponse!.reference!
-            }else{
-                awaitViewDescrib.text = Variables.status.successfulTransactionDescription
-            }
+            self.awaitButton.setImage(emptyImage, for: .normal)
+            self.forConfirmation = false
+            self.awaitButton.isHidden = false
+            self.awaitButton.layer.borderWidth = 0.5
+            self.awaitButton.layer.borderColor = UIColor.lightGray.cgColor
+            self.awaitButton.layer.cornerRadius = 4
+            self.awaitButton.setTitle("Go back to PayAza", for: .normal)
+            self.awaitButton.setTitleColor(self.controllers.hexStringToUIColor(hex: Variables.Colors.blueColor), for: .normal)
+            self.awaitTitle.textColor = self.controllers.hexStringToUIColor(hex: Variables.Colors.greenColor)
+            self.awaitingview.isHidden = false
+            self.transferView.isHidden = true
+            self.myTimer?.invalidate()
         }
-       
-        awaitButton.setImage(emptyImage, for: .normal)
-        self.forConfirmation = false
-        awaitButton.isHidden = false
-        awaitButton.layer.borderWidth = 0.5
-        awaitButton.layer.borderColor = UIColor.lightGray.cgColor
-        awaitButton.layer.cornerRadius = 4
-        awaitButton.setTitle("Go back to PayAza", for: .normal)
-        awaitButton.setTitleColor(controllers.hexStringToUIColor(hex: Variables.Colors.blueColor), for: .normal)
-        awaitTitle.textColor = controllers.hexStringToUIColor(hex: Variables.Colors.greenColor)
-        awaitingview.isHidden = false
-        transferView.isHidden = true
-        myTimer?.invalidate()
+        
        
     }
     
@@ -1095,10 +1103,9 @@ extension ParentViewController: UITextFieldDelegate {
 
             // add their new text to the existing text
             let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
-            if updatedText.count == 2 {
+            if updatedText.count == 3 {
                 if !cardDate.text!.contains("/"){
-                    let newText =  updatedText + "/";
-                    cardDate.text = newText
+                    cardDate.text = cardDate.text?.appending("/")
                 }
                 
                

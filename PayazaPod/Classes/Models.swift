@@ -394,7 +394,7 @@ class CardDynamicDataValues: NSObject, Identifiable {
     {
         return [
             "currency": currency ?? "",
-            "callback_url": callback_url ?? "https://webhook.site/ed6dd427-dfcf-44a3-8fa7-4cc1ab55e029",
+            "callback_url": callback_url ?? "https://payaza.africa/",
             "transaction_reference": transaction_reference ?? "",
             "description": transactionDescription ?? "Test"
         ]
