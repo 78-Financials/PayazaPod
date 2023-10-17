@@ -1,0 +1,143 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, minimum-scale=1, viewport-fit=cover">
+</head>
+<body>
+<button>Run Payment</button>
+<hr/>
+<div id="log"></div>
+
+
+<div id='threedsChallengeRedirect' xmlns='http://www.w3.org/1999/html' style=' height: 60vh'>
+        <form id='threedsChallengeRedirectForm' method='POST' action='' target="challengeFrame">
+            <input type='hidden' name='creq' id="creq" value=''/>
+        </form>
+        <iframe id='challengeFrame' name='challengeFrame' width='100%' height='100%'></iframe>
+    </div>
+
+
+<script>
+const log = (msg) => {
+const p = document.createElement('p')
+p.textContent = msg
+document.querySelector('#log').append(p)
+}
+// to receive messages from native
+webkit.messageHandlers.bridge.onMessage = (msg) => {
+log('from native:' + msg)
+}
+document.querySelector('button').addEventListener('click', () => {
+    
+    
+    
+    
+    const cardNumber = "4173960039093487"; // Card Number
+            const expiryMonth = "02"; // Card Expiry Month
+            const expiryYear = "26"; // Card Expiry Year
+            const securityCode = "801"; // Card Security Code
+
+            var myHeaders = new Headers();
+            myHeaders.append("Authorization", "Payaza UFo3OC1QS0xJVkUtQkNDRUIwMEMtODdBNC00RjJBLUEyNUItNDM5MzE1RjJFRjkx");
+            myHeaders.append("Content-Type", "application/json");
+
+            // UFo3OC1QS0xJVkUtNjc3MUFGN0MtNkM5NC00NDQ2LUI4QTUtNzg3RjgyNDQzMThE
+            //UFo3OC1QS0xJVkUtQTAwNjFENzAtMzY1My00RjU1LUE5NkEtQUMyNTY0OUU5NjU4
+            /////289416886507369076
+            /////"PL-1KBPSCJCRD" + Math.floor(
+            ////    (Math.random() * 10000000) + 1
+            ///    )
+
+            var raw = JSON.stringify({
+                "service_type": "Account",
+                "service_payload": {
+                    "request_application": "Payaza",
+                    "application_module": "USER_MODULE",
+                    "application_version": "1.0.0",
+                    "request_class": "UsdCardChargeRequest",
+                    "first_name": "Kehinde",
+                    "last_name": "Omotoso",
+                    "email_address": "kehinde.omotoso@payaza.africa",
+                    "phone_number": "09058953706",
+                    "amount": 0.01,
+                    "transaction_reference": "KEN-PL-1KBPSCJCRD"+Math.floor((Math.random() * 100000) + 1),
+                    //"transaction_reference":"P-C-20231009-K2C3OQDTW9",
+                    "currency": "USD",
+                    "description": "Test for 3DS Usd",
+                    "card": {
+                        "expiryMonth": expiryMonth,
+                        "expiryYear": expiryYear,
+                        "securityCode": securityCode,
+                        "cardNumber": cardNumber
+                    }
+                }
+            });
+
+            var requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: raw,
+                redirect: 'follow'
+            };
+
+            //https://cards-live.78financials.com/card_charge/
+            //http://localhost:8080/card_charge/
+
+            fetch("https://cards-dev.78financials.com/card_charge/", requestOptions).then(response => response.text()).then(result => {
+                console.log("RAW RESULT: ", result)
+                result = JSON.parse(result);
+                if(result.statusOk !== undefined){
+                    if (result.statusOk) { // ///Handle Success Response
+                        if (result.do3dsAuth) {
+                            const creq = document.getElementById("creq");
+                            creq.value = result.formData;
+                            const form = document.getElementById("threedsChallengeRedirectForm");
+                            form.setAttribute("action", result.threeDsUrl);
+                            form.submit();
+                        } else {
+                            console.log("Payment Process Journey Completed")
+                        }
+                    } else { // ///Handle Error
+                        console.log("Error found", result.debugMessage)
+                        alert("Payment Failed: " + result.debugMessage)
+                    }
+                }
+            }).catch(error => {
+                console.log("::::::::::Error::::::::::", error)
+                alert("Exception Error: " + error.debugMessage)
+            });
+
+            // ///////////Internal Payment Notification
+            window.addEventListener("message", (event) => {
+                console.log("::::::::::::::::::MESSAGE EVENT GOT BACK FROM BACK-END::::::::::::::::::::::")
+                const response = JSON.parse(event.data);
+                console.log("Payment Notification", response)
+                if(response.statusOk !== undefined){
+                    if (response.statusOk === true && response.paymentCompleted === true) { // ////Handle payment successful, do business logic
+                        alert("Payment Successful")
+                    } else { // ///Handle Failed payment
+                        alert("Payment Failed")
+                    }
+                }
+                
+                log(typeof webkit.messageHandlers.bridge.postMessage)
+                // send messages to native
+               webkit.messageHandlers.bridge.postMessage('Card Service Response: '+event.data)
+                
+                const container = document.getElementById("threedsChallengeRedirect");
+                container.style.display='none';
+                
+            });
+    
+    
+    
+    
+    
+    
+    
+
+})
+</script>
+</body>
+</html>

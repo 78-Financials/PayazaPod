@@ -65,6 +65,7 @@
 		77073D0B2AC3642B00156293 /* visa.png in Resources */ = {isa = PBXBuildFile; fileRef = 77073D042AC3642B00156293 /* visa.png */; };
 		77073D0C2AC3642B00156293 /* maestro.png in Resources */ = {isa = PBXBuildFile; fileRef = 77073D052AC3642B00156293 /* maestro.png */; };
 		77073D0D2AC3642B00156293 /* maestro.png in Resources */ = {isa = PBXBuildFile; fileRef = 77073D052AC3642B00156293 /* maestro.png */; };
+		774CB4B52ADDEB9E0021769E /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 774CB4B42ADDEB9D0021769E /* index.html */; };
 		77640B962AC6B47800A3F570 /* verve.png in Resources */ = {isa = PBXBuildFile; fileRef = 77640B952AC6B47800A3F570 /* verve.png */; };
 		791D39FF14E0B2F1C74CC5C75CCF76BF /* Data+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6799DC83F5701B1E04E22A4D06EB9ABB /* Data+Extensions.swift */; };
 		7D65B0218352A58A7B446F1059FBBA8A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
@@ -284,6 +285,7 @@
 		77073D032AC3642A00156293 /* amex.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = amex.png; path = PayazaPod/Assets/amex.png; sourceTree = "<group>"; };
 		77073D042AC3642B00156293 /* visa.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = visa.png; path = PayazaPod/Assets/visa.png; sourceTree = "<group>"; };
 		77073D052AC3642B00156293 /* maestro.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = maestro.png; path = PayazaPod/Assets/maestro.png; sourceTree = "<group>"; };
+		774CB4B42ADDEB9D0021769E /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = index.html; path = PayazaPod/Classes/index.html; sourceTree = "<group>"; };
 		77640B952AC6B47800A3F570 /* verve.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = verve.png; path = PayazaPod/Assets/verve.png; sourceTree = "<group>"; };
 		7815C9B1CD101AF102EF2BE9D7E23A40 /* CreditCardValidator.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = CreditCardValidator.debug.xcconfig; sourceTree = "<group>"; };
 		79419F83A849A845CDDAD52486C83627 /* Models.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Models.swift; path = PayazaPod/Classes/Models.swift; sourceTree = "<group>"; };
@@ -436,6 +438,7 @@
 		063C0E32FF7353E408D84125D3BE5663 /* PayazaPod */ = {
 			isa = PBXGroup;
 			children = (
+				774CB4B42ADDEB9D0021769E /* index.html */,
 				77640B952AC6B47800A3F570 /* verve.png */,
 				77073D032AC3642A00156293 /* amex.png */,
 				77073D052AC3642B00156293 /* maestro.png */,
@@ -1089,6 +1092,7 @@
 				77073D0A2AC3642B00156293 /* visa.png in Resources */,
 				F136A8AD6ACEEEFCA5EE79FCC1F292B8 /* PayazaPod-PayazaPod in Resources */,
 				9E00BA15E635A648E64388636A6CE649 /* refres.png in Resources */,
+				774CB4B52ADDEB9E0021769E /* index.html in Resources */,
 				70C713F675B4617B51334F2D7BB55161 /* transfer.png in Resources */,
 				77073D0C2AC3642B00156293 /* maestro.png in Resources */,
 			);
