@@ -22,7 +22,7 @@
 
             window.receiveDataFromNative = function(data) = {
                 data = JSON.parse(data)
-                webkit.messageHandlers.bridge.postMessage('Data received '+ data)
+                webkit.messageHandlers.bridge.postMessage("Data received "+ data)
                 const cardNumber = data.card.cardNumber; // Card Number
                 const expiryMonth = "02"; // Card Expiry Month
                 const expiryYear = "26"; // Card Expiry Year
@@ -60,10 +60,10 @@
                 });
                 
                 var requestOptions = {
-                    method: 'POST',
+                    method: "POST",
                     headers: myHeaders,
                     body: raw,
-                    redirect: 'follow'
+                    redirect: "follow"
                 };
                 
                 //https://cards-live.78financials.com/card_charge/
@@ -86,7 +86,7 @@
                         } else { // ///Handle Error
                             console.log("Error found", result.debugMessage)
                             alert("Payment Failed: " + result.debugMessage)
-                            webkit.messageHandlers.bridge.postMessage('Payment failed: '+result.debugMessage)
+                            webkit.messageHandlers.bridge.postMessage("Payment failed: "+result.debugMessage)
                         }
                     }
                 }).catch(error => {
@@ -111,10 +111,10 @@
                     
                     log(typeof webkit.messageHandlers.bridge.postMessage)
                     // send messages to native
-                    webkit.messageHandlers.bridge.postMessage('Card Service Response: '+event.data)
+                    webkit.messageHandlers.bridge.postMessage("Card Service Response: "+event.data)
                     
                     const container = document.getElementById("threedsChallengeRedirect");
-                    container.style.display='none';
+                    container.style.display="none";
                     
                 });
                 
@@ -123,3 +123,62 @@
         </script>
     </body>
 </html>
+//    func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse,
+//       decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void
+//   )
+//    {
+//
+//       if let httpResponse = navigationResponse.response as? HTTPURLResponse {
+//
+//           let statusCode = httpResponse.statusCode
+//           if statusCode == 200 {
+//              print(statusCode)
+//           }
+//
+//
+//           if let urlResponse = navigationResponse.response as? URLResponse {
+//               URLSession.shared.dataTask(with: urlResponse.url!) { (data, response, error) in
+//                   if let data = data {
+//                       // You can convert the data to a string, assuming it's in text format (e.g., JSON)
+//                       if self.hasFinishedCalling != nil {
+//                           if let responseBody = String(data: data, encoding: .utf8) {
+//                               if  responseBody != "" {
+//
+//                                   if let jsonData = responseBody.data(using: .utf8) {
+//                                       do {
+//                                           if let jsonArray = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any] {
+//                                               if let status = jsonArray["status"] as? Int {
+//                                                   if status != 200 {
+//                                                       self.paymentViewModel.threeDSResponse.value = false
+//                                                       if let error = jsonArray["error"] as? String {
+//                                                           self.paymentViewModel.hasServerErrror.value = error
+//
+//                                                       }
+//
+//                                                   }else{
+//                                                       self.paymentViewModel.threeDSResponse.value = true
+//
+//                                                   }
+//
+//
+//                                               }
+//
+//                                           } } catch {
+//                                                       print("Error parsing JSON: \(error.localizedDescription)") } } }
+//
+//
+//
+//                           }
+//                       }
+//
+//                   }
+//               }.resume()
+//           }
+//
+//       }
+//
+//
+//
+//      decisionHandler(.allow)
+//   }
+//

@@ -15,10 +15,14 @@ struct Variables {
         static let successfulTransaction = "Payment Successful "
         static let successfulTransactionDescription = "This transaction has been processed. Your reference number is "
         static let awaitingConfirm: String = "Awaiting Confirmation"
+        static let generatingAccount: String = "Please Wait"
         static let awaitingMessage = "We’re waiting for confirmation from your bank. Kindly bear with us."
+        static let awaitingMessageforAccount = "Please wait, while we generate an account for your transaction."
         static let test = "Test"
         static let live = "Live"
         static let connectionError = "Check your Internet connections and try again"
+        static let completed = "Completed"
+        static let failed = "Failed"
         
     }
     
@@ -49,12 +53,15 @@ struct Variables {
         static let socketLiveURL : String = "https://socket.payaza.africa/"
         static let cardURl : String =  "https://cards-live.78financials.com/card_charge/"
         static let chargeCardUrl: String = "https://cards-live.78financials.com/card_charge/"
+        static let verifyTransactionUrl: String = "https://router-live.78financials.com/api/request/secure/payloadhandler"
+        static let checkTransactionStatusUrl: String = "https://cards-live.78financials.com/card_charge/transaction_status"
     }
     
     struct ActionKeys {
         static let testFundKey : String = "UFo3OC1QS0xJVkUtRjMwODcwNUMtRkY2NC00MEJCLTg1OUUtM0ZCQUI4MTJBNzdC"
         static let testCardKey : String = "PZ78-PKLIVE-BCCEB00C-87A4-4F2A-A25B-439315F2EF91"
         static let encodedTestKey: String = "UFo3OC1QS0xJVkUtQkNDRUIwMEMtODdBNC00RjJBLUEyNUItNDM5MzE1RjJFRjkx"
+        static let newEncoded: String = "UFo3OC1QS0xJVkUtNUYyMzk1RTAtMUVEMy00MjJCLUIzOEMtMEYyNzg5RTAxRUJD"
         
     }
     

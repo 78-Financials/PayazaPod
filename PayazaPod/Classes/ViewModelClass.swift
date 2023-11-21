@@ -16,10 +16,10 @@ class ViewModelClass: ObservableObject {
     var fetchNewAccount: LiveData<AccountResponse?> = LiveData(nil)
     var paymentVerifiedByPayAza : LiveData<TransactionResponse?> = LiveData(nil)
     var paymentComplete : LiveData<TransactionResponse?> = LiveData(nil)
-    var hasServerErrror : LiveData<String?> = LiveData(nil)
+    var hasServerError : LiveData<String?> = LiveData(nil)
     var serverError : LiveData<String?> = LiveData(nil)
     var getChargeResponse : LiveData<ChargeCardResponse?> = LiveData(nil)
-    var threeDSResponse:LiveData<Bool?> = LiveData(nil)
+    var checkTransactionResponse:LiveData<CheckTransactionResponse?> = LiveData(nil)
     
     
     
@@ -52,13 +52,5 @@ class ViewModelClass: ObservableObject {
         return true
     }
     
-    func cardTypeValidator(cardField: UITextField){
-//        if let type = CreditCardValidator(number).type {
-//            print(type.name) // Visa, Mastercard, Amex etc.
-//        } else {
-//            // I Can't detect type of credit card
-//        }
-        
-        
-    }
+
 }

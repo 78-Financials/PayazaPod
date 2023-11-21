@@ -398,5 +398,55 @@ class CardDynamicDataValues: NSObject, Identifiable {
             "transaction_reference": transaction_reference ?? "",
             "description": transactionDescription ?? "Test"
         ]
-    }}
+    }
+    
+}
+
+
+class CheckTransactionResponse: NSObject, Identifiable {
+    public var transaction_amount: Double?
+    public var debug_message: String?
+    public var transaction_fee: Double?
+    public var created_at: String?
+    public var transaction_reference: String?
+    public var payment_date: String?
+    public var transaction_status: String?
+    
+    
+//    init(id: Int64?, transaction_amount: String?, transaction_fee_amount: String?, account_name: String?, bank_code: String?, currency: Currency, bank_name: String?, transaction_reference: String?, account_number: String?, transaction_payable_amount: String? ) {
+//        self.id = id
+//        self.transaction_reference = transaction_reference
+//        self.transaction_amount = transaction_amount
+//        self.transaction_fee_amount = transaction_fee_amount
+//        self.account_name = account_name
+//        self.account_number = account_number
+//        self.transaction_payable_amount = transaction_payable_amount
+//        self.currency = currency
+//        self.bank_code = bank_code
+//        self.bank_name = bank_name
+//    }
+    
+    
+    init(respons: NSDictionary){
+        transaction_amount = (respons["transaction_amount"]) as! Double?
+        debug_message = (respons["debug_message"]) as! String?
+        transaction_fee = (respons["transaction_fee"]) as! Double?
+        created_at = (respons["created_at"]) as! String?
+        transaction_reference = (respons["transaction_reference"]) as! String?
+        payment_date = (respons["payment_date"]) as! String?
+        transaction_status = (respons["transaction_status"]) as! String?
+        
+    }
+    
+    func toAnyObject() -> Dictionary<String, Any>
+    {
+        return [
+            "debug_message": debug_message ?? "",
+            "debug_message": debug_message as Any,
+            "transaction_reference": transaction_reference as Any,
+            "created_at": created_at as Any,
+            
+        ]
+    }
+}
 

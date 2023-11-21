@@ -46,20 +46,12 @@ class WebManager: NSObject, WKNavigationDelegate {
                 let request:URLRequest = URLRequest(url: urll!)
                 self.myWebview!.load(request)
                 self.myWebview!.allowsBackForwardNavigationGestures = true
-                self.paymentViewModel.hasServerErrror.observe{(data ) in
+                self.paymentViewModel.hasServerError.observe{(data ) in
                     if data != nil {
                         delegateController.onPaymentFailed(errorMessage: data!)
                     }
                 }
                 
-                self.paymentViewModel.threeDSResponse.observe{(data) in
-                    if data != nil {
-                        if data! {
-                            delegateController.onPaymentComplete(response: true)
-                        }
-                        
-                    }
-                }
             }
         }
             
@@ -76,52 +68,7 @@ class WebManager: NSObject, WKNavigationDelegate {
        decidePolicyFor navigationResponse: WKNavigationResponse,
        decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void
    ){
-       
-       if let httpResponse = navigationResponse.response as? HTTPURLResponse {
-           
-           let statusCode = httpResponse.statusCode
-           
-           if let urlResponse = navigationResponse.response as? URLResponse {
-               URLSession.shared.dataTask(with: urlResponse.url!) { (data, response, error) in
-                   if let data = data {
-                       // You can convert the data to a string, assuming it's in text format (e.g., JSON)
-                       if self.hasFinishedCalling != nil {
-                           if let responseBody = String(data: data, encoding: .utf8) {
-                               if  responseBody != "" {
-                                
-                                   if let jsonData = responseBody.data(using: .utf8) {
-                                       do {
-                                           if let jsonArray = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any] {
-                                               if let status = jsonArray["status"] as? Int {
-                                                   if status != 200 {
-                                                       self.paymentViewModel.threeDSResponse.value = false
-                                                       if let error = jsonArray["error"] as? String {
-                                                           self.paymentViewModel.hasServerErrror.value = error
-                                                          
-                                                       }
-                                                       
-                                                   }else{
-                                                       self.paymentViewModel.threeDSResponse.value = true
-                                                       
-                                                   }
-                                                 
-                                                   
-                                               }
-                                               
-                                           } } catch {
-                                                       print("Error parsing JSON: \(error.localizedDescription)") } } }
-                                               
-                                        
-                               
-                           }
-                       }
-                      
-                   }
-               }.resume()
-           }
-       }
-           
-       
+    
        
       decisionHandler(.allow)
    }
@@ -132,7 +79,7 @@ class WebManager: NSObject, WKNavigationDelegate {
    
    
     func webView( _ webView: WKWebView,didFail navigation: WKNavigation!,withError error:Error){
-        self.paymentViewModel.hasServerErrror.value = Variables.status.connectionError
+        self.paymentViewModel.hasServerError.value = Variables.status.connectionError
        print(error)
    }
     

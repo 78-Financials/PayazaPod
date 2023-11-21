@@ -12,7 +12,6 @@ struct PayAzaService {
     var merchantKey : String?
     var connectionMode : String?
     var viewModel : ViewModelClass?
-    var forStartUp : Bool = true
     var userInfo : UserInfo?
     var transactionAmount: Double?
     var socketIoManager : SocketIOManager?
@@ -20,10 +19,10 @@ struct PayAzaService {
     
     
     
-    func initialiseService(deviceInfo : DeviceInfo) {
-         var newRequest : URLRequest?
+    func initialiseService(deviceInfo : DeviceInfo, isFirstime: Bool) {
+        var newRequest : URLRequest?
         newRequest = controllers.configureRequestHeader(baseUrl: baseUrl!, connectionMethod: Variables.ConnectionMethod.post, merchantKey: merchantKey!)
- 
+        
         let service_payloadData : [String: Any] = [
             "request_application": "Payaza",
             "request_class": "UseCheckoutRequest",
@@ -43,40 +42,40 @@ struct PayAzaService {
             "device_name": deviceInfo.deviceName!,
             "device_os": deviceInfo.deviceOs!,
             "request_channel_type": "ANDROID",]
-
-             let body : [String: Any] = [
-                "service_type": "Transaction",
-                "service_payload": service_payloadData
-                 
-             ]
-         do {
-             newRequest?.httpBody =  try JSONSerialization.data(withJSONObject: body, options: [])
-         } catch let error {
-             print("An error occured while parsing the bodyinto json, error", error)
-         }
-         
-         let session = URLSession.shared
+        
+        let body : [String: Any] = [
+            "service_type": "Transaction",
+            "service_payload": service_payloadData
+            
+        ]
+        do {
+            newRequest?.httpBody =  try JSONSerialization.data(withJSONObject: body, options: [])
+        } catch let error {
+            print("An error occured while parsing the bodyinto json, error", error)
+        }
+        
+        let session = URLSession.shared
         let task = session.dataTask(with: newRequest!, completionHandler: { data, response, error -> Void in
             if data != nil {
                 do {
                     let json = try JSONSerialization.jsonObject(with: data!) as! Dictionary<String, AnyObject>
-                  
+                    
                     let responseContent = json["response_content"]
                     let responseCode = json["response_code"] as? Int64
                     if responseCode != 200 {
                         let responseServerMessage  = json["response_message"] as? String
-                        viewModel!.hasServerErrror.value = responseServerMessage
+                        viewModel!.hasServerError.value = responseServerMessage
                     }else {
                         let transactinnRef = responseContent?["transaction_reference"] as? String
                         let customer = UserInfo(userinfo: responseContent?["customer"] as! NSDictionary)
-                        if forStartUp{
+                        if isFirstime{
                             viewModel!.fetchCustomerInfo.value = customer
                         }
                         if transactinnRef != nil {
                             socketIoManager?.viewModel = viewModel
                             socketIoManager?.establishNewConnection(transactionRef: transactinnRef!)
                             generateDynamicNumberService(transactinnRef!, deviceInfo: deviceInfo )
-                          
+                            
                         }
                     }
                     
@@ -87,62 +86,58 @@ struct PayAzaService {
             }
             else {
                 print("Turn On Internet Connections")
-                viewModel!.hasServerErrror.value = Variables.status.connectionError
+                viewModel!.hasServerError.value = Variables.status.connectionError
             }
             
         })
-
+        
         task.resume()
-                
+        
     }
     
-
+    
     
     func generateDynamicNumberService( _ transactionRef: String, deviceInfo: DeviceInfo) {
         var newRequest : URLRequest?
         newRequest = controllers.configureRequestHeader(baseUrl: baseUrl!, connectionMethod: Variables.ConnectionMethod.post, merchantKey: merchantKey!)
-      
-
+        
+        
         let service_payloadData = ["request_application": "Payaza",
-                        "request_class": "FetchDynamicVirtualAccountRequest",
-                        "application_module": "USER_MODULE",
-                        "application_version": "1.0.0",
-                        "request_channel": "CUSTOMER_PORTAL",
-                        "connection_mode": connectionMode!,
-                        "transaction_reference": transactionRef,
-                        "device_id": deviceInfo.deviceId,
-                        "device_name": deviceInfo.deviceName!,
-                        "device_os": deviceInfo.deviceOs,
-                        "request_channel_type": "API_CLIENT"]
-
-            let body : [String: Any] = [
-                "service_type": "Account",
-                "service_payload": service_payloadData,
-            ]
+                                   "request_class": "FetchDynamicVirtualAccountRequest",
+                                   "application_module": "USER_MODULE",
+                                   "application_version": "1.0.0",
+                                   "request_channel": "CUSTOMER_PORTAL",
+                                   "connection_mode": connectionMode!,
+                                   "transaction_reference": transactionRef,
+                                   "device_id": deviceInfo.deviceId,
+                                   "device_name": deviceInfo.deviceName!,
+                                   "device_os": deviceInfo.deviceOs,
+                                   "request_channel_type": "API_CLIENT"]
+        
+        let body : [String: Any] = [
+            "service_type": "Account",
+            "service_payload": service_payloadData,
+        ]
         do {
-                    newRequest?.httpBody =  try JSONSerialization.data(withJSONObject: body, options: [])
-                } catch let error {
-                    print("An error occured while parsing the bodyinto json, error", error)
+            newRequest?.httpBody =  try JSONSerialization.data(withJSONObject: body, options: [])
+        } catch let error {
+            print("An error occured while parsing the bodyinto json, error", error)
         }
         
         let session = URLSession.shared
         let task = session.dataTask(with: newRequest!, completionHandler: { data, response, error -> Void in
-//            print(response!)
+            //            print(response!)
             if data != nil {
                 do {
                     let json = try JSONSerialization.jsonObject(with: data!) as! Dictionary<String, AnyObject>
-                  
+                    
                     let responseContent = json["response_content"]
                     if responseContent != nil {
                         let accountResponse = AccountResponse(checkout: responseContent as! NSDictionary)
-                        if forStartUp{
-                            viewModel?.fetchAccountResponse.value = accountResponse
-                        }else{
-                            viewModel?.fetchNewAccount.value = accountResponse
-                        }
+                        viewModel?.fetchAccountResponse.value = accountResponse
                     }else {
                         let responseServerMessage  = json["response_message"] as? String
-                        viewModel!.hasServerErrror.value = responseServerMessage
+                        viewModel!.hasServerError.value = responseServerMessage
                     }
                     
                     
@@ -151,12 +146,12 @@ struct PayAzaService {
                 }
             }else {
                 print("Turn On Internet Connections")
-                viewModel!.hasServerErrror.value = Variables.status.connectionError
+                viewModel!.hasServerError.value = Variables.status.connectionError
             }
             
         })
         task.resume()
-}
+    }
     
     
     
@@ -179,9 +174,9 @@ struct PayAzaService {
                                                    "description": cardValues.transactionDescription!,
                                                    "card": card!.toAnyObject(),
                                                    "callback_url": cardValues.callback_url!
-                                            
+                                                   
         ]
-       
+        
         let body : [String: Any] = [
             "service_type": "Account",
             "service_payload": service_payloadData,
@@ -189,9 +184,9 @@ struct PayAzaService {
         
         do {
             newRequest?.httpBody =  try JSONSerialization.data(withJSONObject: body, options: [])
-            } catch let error {
-                print("An error occured while parsing the bodyinto json, error", error)
-                }
+        } catch let error {
+            print("An error occured while parsing the bodyinto json, error", error)
+        }
         let session = URLSession.shared
         let task = session.dataTask(with: newRequest!, completionHandler: { data, response, error -> Void in
             if data != nil {
@@ -201,24 +196,81 @@ struct PayAzaService {
                     if cardRessponse.statusOk! {
                         self.viewModel?.getChargeResponse.value = cardRessponse
                     }else{
-                        viewModel!.hasServerErrror.value = cardRessponse.debugMessage
+                        viewModel!.hasServerError.value = cardRessponse.debugMessage
                     }
                     
                     
                 } catch {
                     print("error")
-                    viewModel!.hasServerErrror.value = Variables.status.connectionError
+                    viewModel!.hasServerError.value = Variables.status.connectionError
                 }
             }else {
                 print("Turn On Internet Connections")
-                viewModel!.hasServerErrror.value = Variables.status.connectionError
+                viewModel!.hasServerError.value = Variables.status.connectionError
             }
             
         })
         task.resume()
+    }
+    
+    
+    func verifyTransaction(transactonRef: String) {
+        
+        var newRequest : URLRequest?
+        newRequest = controllers.configureRequestHeader(baseUrl: Variables.BaseURLs.checkTransactionStatusUrl, connectionMethod: Variables.ConnectionMethod.post, merchantKey: merchantKey!)
+        
+        let service_payloadData : [String: Any] = [
+            "request_application": "Payaza",
+            "application_module": "USER_MODULE",
+            "application_version": "1.0.0",
+            "request_class": "CheckTransactionStatusRequest",
+            "transaction_reference": transactonRef
+        ]
+        
+        
+        let body : [String: Any] = [
+            "service_type": "Account",
+            "service_payload": service_payloadData,
+        ]
+        do {
+            newRequest?.httpBody =  try JSONSerialization.data(withJSONObject: body, options: [])
+        } catch let error {
+            print("An error occured while parsing the bodyinto json, error", error)
         }
+        let session = URLSession.shared
+        let task = session.dataTask(with: newRequest!, completionHandler: { data, response, error -> Void in
+            if data != nil {
+                do {
+                    let json = try JSONSerialization.jsonObject(with: data!) as! Dictionary<String, AnyObject>
+                    let responseContent = json["response_content"]
+                    let responseCode = json["response_code"] as? Int64
+                    if responseCode != 200 { // transaction failed
+                        let responseServerMessage  = json["response_message"] as? String
+                        print(responseServerMessage as Any)
+                        viewModel!.hasServerError.value = responseServerMessage
+                    }
+                    else {// transaction was a success
+                        let responseData = CheckTransactionResponse(respons: responseContent  as! NSDictionary)
+                        // Pass response to the mainpage
+                        viewModel?.checkTransactionResponse.value = responseData
+                       
+                    }
+                    
+                } catch {
+                    print("error")
+                    viewModel!.hasServerError.value = Variables.status.connectionError
+                }
+            }else {
+                print("Turn On Internet Connections")
+                viewModel!.hasServerError.value = Variables.status.connectionError
+            }
+            
+        })
+        task.resume()
+        
+    }
     
 }
-        
-    
-//urlStr    String    "https://cards-live.78financials.com/card_charge/process3DS"    
+
+
+

@@ -10,7 +10,7 @@ import DropDown
 import SocketIO
 import WebKit
 
-class ParentViewController: UIViewController, WKNavigationDelegate, WKScriptMessageHandler{
+class ParentViewController: UIViewController, WKNavigationDelegate{
     
     
     @IBOutlet weak var securedText: UILabel!
@@ -154,7 +154,6 @@ class ParentViewController: UIViewController, WKNavigationDelegate, WKScriptMess
     var serverError : String?
     var userMerchantKey: String?
     var viewModel : ViewModelClass?
-    var paymentViewModel =  ViewModelClass()
     var payAzaManager: PayazaManager?
     var connectionMode : String?
     var amount: Double?
@@ -174,13 +173,15 @@ class ParentViewController: UIViewController, WKNavigationDelegate, WKScriptMess
     private var transactionReference: String?
     private var hasFinishedCalling : Bool?
     private var errorResponse: String?
-    private var forCard: Bool = false
+    private var forCard: Bool = true
     let configuration = WKWebViewConfiguration()
     private var isAppActive : Bool? = false
-    
+    private var isFirstTime : Bool = true
+    private var isCheckingForRespone : Bool = false
     private var myWebview: WKWebView?
     private var isLoading: Bool = false
     private var card: CardBody?
+    private var checkTransactionResponse: CheckTransactionResponse?
     
     
     
@@ -281,9 +282,10 @@ class ParentViewController: UIViewController, WKNavigationDelegate, WKScriptMess
     
     
     private func initialiseAllViewModels(){
-        viewModel!.hasServerErrror.observe{(value) in
+        viewModel!.hasServerError.observe{(value) in
             if value != nil {
                 self.openPayment(errorString: value)
+                self.isCheckingForRespone = false
             }
         }
         
@@ -303,6 +305,7 @@ class ParentViewController: UIViewController, WKNavigationDelegate, WKScriptMess
         viewModel?.paymentVerifiedByPayAza.observe{(response) in
             if response != nil {
                 self.socketIoManager.hasGottenResponse = true
+                self.isCheckingForRespone = false
                 self.finalResponse = response
                 self.showSucess()
             }
@@ -321,20 +324,11 @@ class ParentViewController: UIViewController, WKNavigationDelegate, WKScriptMess
             }
         }
         
-        paymentViewModel.hasServerErrror.observe{(data) in
-            if data != nil {
-                self.serverError = data
-                self.showFaiilure()
-            }
-        }
         
-        paymentViewModel.threeDSResponse.observe{(data) in
+        viewModel?.checkTransactionResponse.observe{(data) in
             if data != nil {
-                if data! {
-                    self.showSucess()
-                }else{
-                    self.showFaiilure()
-                }
+                self.checkTransactionResponse = data!
+                self.showSucess()
             }
         }
         
@@ -345,134 +339,22 @@ class ParentViewController: UIViewController, WKNavigationDelegate, WKScriptMess
         DispatchQueue.main.async {
             
             let config = WKWebViewConfiguration()
-            let source = "document.addEventListener('message', function(){ window.webkit.messageHandlers.message.postMessage('click clack!'); })"
-            let myJavaScriptFunction = """
-                        document.addEventListener('message', (event) => {
-                                  const response = JSON.parse(event.data);
-                                  if(response.statusOk !== undefined){
-                                      if (response.statusOk === true && response.paymentCompleted === true) {
-                                          alert("Payment Successful")
-                                      } else {
-                                          alert("Payment Failed")
-                                      }
-                                  }
-                                  window.webkit.messageHandlers.message.postMessage('Card Service Response: '+event.data)
-                                  
-                              });
-               """
-            
-            
-            //        let script = WKUserScript(source: myJavaScriptFunction, injectionTime: .atDocumentEnd, forMainFrameOnly: false)
-            
-            
             let userContentController = WKUserContentController()
             
-            //  userContentController.addUserScript(script)
-            //config.userContentController.add(self, name: "message")
-            userContentController.add(self, name: "bridge")
-            
             config.userContentController = userContentController
-            
-                        self.myWebview = WKWebView(frame: self.mainView.bounds, configuration: config)
-                        self.myWebview!.navigationDelegate = self
-                        self.mainView.addSubview(self.myWebview!)
-//                        let url = NSURL(string: baseUrl)! as URL
-//                        self.myWebview!.loadHTMLString(htmlLink, baseURL: nil)
-            
-            let mainBundle = Bundle(for: ParentViewController.self)
-            guard let path: String = mainBundle.path(forResource: "index", ofType: "html")else { return }
-                    
-                    
-                  //  main.path(forResource: "index", ofType: "html") else { return }
-            let localHTMLUrl = URL(fileURLWithPath: path, isDirectory: false)
-            self.myWebview!.loadFileURL(localHTMLUrl, allowingReadAccessTo: localHTMLUrl)
-            
-            
-            
-            
-            //   self.myWebview!.allowsBackForwardNavigationGestures = true
-            //    self.myWebview!.evaluateJavaScript(myJavaScriptFunction, completionHandler: nil)
+            self.myWebview = WKWebView(frame: self.mainView.bounds, configuration: config)
+            self.myWebview!.navigationDelegate = self
+            self.mainView.addSubview(self.myWebview!)
+            self.myWebview!.loadHTMLString(htmlLink, baseURL: nil)
+            self.myWebview!.allowsBackForwardNavigationGestures = true
             
         }
     }
     
-    
-    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        print("message: \(message.body)")
-        // and whatever other actions you want to take
-        print(message.body)
-        let date = Date()
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-//            self.messageToWebview(msg: "hello, I got your messsage: \(message.body) at \(date)")
-//        }
-        
-        
-        if message.name == "bridge", let parameter = message.body as? String {
-            // Handle the message from JavaScript
-            print("Received message from JavaScript: \(parameter)")
-            
-            // You can call the JavaScript function here as well
-            //               let callJSFunction = "myJavaScriptFunction('Hello from Swift!')"
-            //            self.myWebview!.evaluateJavaScript(callJSFunction, completionHandler: nil)
-        }
-        
-        
-    }
-    func messageToWebview(msg: String) {
-        self.myWebview?.evaluateJavaScript("webkit.messageHandlers.message.onMessage('\(msg)')")
-        
-        
-    }
     
     func webView( _ webView: WKWebView,didFail navigation: WKNavigation!,withError error:Error){
-        self.paymentViewModel.hasServerErrror.value = Variables.status.connectionError
+        self.viewModel?.hasServerError.value = Variables.status.connectionError
         print(error)
-        
-        
-        
-        
-    }
-    
-    
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        self.myWebview = webView
-        let roundedValue = round(amount! * 100) / 100.0
-        
-        let service_payloadData : [String: Any] = ["request_application": "Payaza",
-                                                   "application_module": "USER_MODULE",
-                                                   "application_version": "1.0.0",
-                                                   "request_class": "UsdCardChargeRequest",
-                                                   "first_name": userinfo!.first_name!,
-                                                   "last_name": userinfo!.last_name!,
-                                                   "email_address":self.userinfo!.email_address!,
-                                                   "phone_number": "0988909",
-                                                   "amount": roundedValue,
-                                                   "transaction_reference": transactionReference!,
-                                                   "currency": currency!,
-                                                   "description": transactionDescription!,
-                                                   "card": card!.toAnyObject(),
-                                                   "callback_url": ""
-                                            
-        ]
-       
-        let body : [String: Any] = [
-            "service_type": "Account",
-            "service_payload": service_payloadData,
-        ]
-        
-        
-        
-        do {
-            let  jsonBody =  try JSONSerialization.data(withJSONObject: body, options: [])
-            
-            self.myWebview?.evaluateJavaScript("receiveDataFromNative('{}')"){(msg, error) in
-                print("Response from Receive Data \(msg) _ \(error)")
-            }
-            
-            
-        } catch let error {
-            print("An error occured while parsing the bodyinto json, error", error)
-        }
         
     }
     
@@ -480,78 +362,20 @@ class ParentViewController: UIViewController, WKNavigationDelegate, WKScriptMess
     
     
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: (WKNavigationActionPolicy) -> Void) {
-        //         if let urlStr = navigationAction.request.url?.absoluteString{
-        //            if urlStr.contains("https://cards-live.78financials.com/card_charge/process3DS"){
-        //                self.hasFinishedCalling = true
-        //                self.myWebview?.isHidden = true
-        //                isLoading = false
-        //             }
-        //
-        //        }
+        if let urlStr = navigationAction.request.url?.absoluteString{
+            if urlStr.contains("https://payaza.africa/"){
+                self.hasFinishedCalling = true
+                self.myWebview?.isHidden = true
+                isLoading = false
+                self.payAzaService.verifyTransaction(transactonRef: self.transactionReference!)
+                
+                
+            }
+            
+        }
         decisionHandler(.allow)
         
     }
-    
-    //    func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse,
-    //       decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void
-    //   )
-    //    {
-    //
-    //       if let httpResponse = navigationResponse.response as? HTTPURLResponse {
-    //
-    //           let statusCode = httpResponse.statusCode
-    //           if statusCode == 200 {
-    //              print(statusCode)
-    //           }
-    //
-    //
-    //           if let urlResponse = navigationResponse.response as? URLResponse {
-    //               URLSession.shared.dataTask(with: urlResponse.url!) { (data, response, error) in
-    //                   if let data = data {
-    //                       // You can convert the data to a string, assuming it's in text format (e.g., JSON)
-    //                       if self.hasFinishedCalling != nil {
-    //                           if let responseBody = String(data: data, encoding: .utf8) {
-    //                               if  responseBody != "" {
-    //
-    //                                   if let jsonData = responseBody.data(using: .utf8) {
-    //                                       do {
-    //                                           if let jsonArray = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any] {
-    //                                               if let status = jsonArray["status"] as? Int {
-    //                                                   if status != 200 {
-    //                                                       self.paymentViewModel.threeDSResponse.value = false
-    //                                                       if let error = jsonArray["error"] as? String {
-    //                                                           self.paymentViewModel.hasServerErrror.value = error
-    //
-    //                                                       }
-    //
-    //                                                   }else{
-    //                                                       self.paymentViewModel.threeDSResponse.value = true
-    //
-    //                                                   }
-    //
-    //
-    //                                               }
-    //
-    //                                           } } catch {
-    //                                                       print("Error parsing JSON: \(error.localizedDescription)") } } }
-    //
-    //
-    //
-    //                           }
-    //                       }
-    //
-    //                   }
-    //               }.resume()
-    //           }
-    //
-    //       }
-    //
-    //
-    //
-    //      decisionHandler(.allow)
-    //   }
-    //
-    
     
     
     private func launchPayAza() {
@@ -562,7 +386,8 @@ class ParentViewController: UIViewController, WKNavigationDelegate, WKScriptMess
         payAzaService.merchantKey = userMerchantKey
         payAzaService.connectionMode = connectionMode
         payAzaService.socketIoManager = socketIoManager
-        payAzaService.initialiseService(deviceInfo: deviceInfo!)
+        cardOption()
+        self.loader.isHidden = true
     }
     
     
@@ -573,6 +398,7 @@ class ParentViewController: UIViewController, WKNavigationDelegate, WKScriptMess
                 self.serverError = errorString
                 self.transferView.isHidden = true
                 self.awaitingview.isHidden = false
+                self.mainCardView.isHidden = true
                 self.showFaiilure()
             }else {
                 self.configureViews()
@@ -603,9 +429,6 @@ class ParentViewController: UIViewController, WKNavigationDelegate, WKScriptMess
     }
     
     private func configureViews(){
-        merchantName.text = merchantNameString
-        userName.text = "Billed to: " + userinfo!.first_name! + " " + userinfo!.last_name!
-        userEmail.text = userinfo!.email_address
         transferbank.text = accountResponse!.bank_name!
         transferAccount.text = accountResponse!.account_number!
         let feeText = "(FEES : ₦" + accountResponse!.transaction_fee_amount! + ")"
@@ -652,12 +475,12 @@ class ParentViewController: UIViewController, WKNavigationDelegate, WKScriptMess
         greyView.backgroundColor = controllers.hexStringToUIColor(hex: "#F5F5F5")
         view.addGestureRecognizer(tap2)
         socketIoManager.viewModel = viewModel
+        startCountdown()
+        showtransferView()
         handleTap()
-        if currency! == "NGN"{
-            transferOption()
-        }else{
-            cardOption()
-        }
+        
+        
+        
         
     }
     
@@ -690,27 +513,22 @@ class ParentViewController: UIViewController, WKNavigationDelegate, WKScriptMess
     }
     
     
-    @objc func transferAction() {
-        
-    }
-    
-    func transferOption(){
-        forCard = false
+    func showtransferView() {
         if developerView.isHidden {
             if serverError == nil {
-                bankView.isHidden = true
-                mainCardView.isHidden = true
-                transferView.isHidden = false
-                awaitingview.isHidden = true
-                mainView.isHidden = false
-                confirmationButton.isHidden = false
-                forBankPayment = false
-                if !isAppActive!{
-                    isAppActive = true
-                    startCountdown()
+                if isCheckingForRespone { // An existing check exists for a transfer
+                    showLoader(false)
+                }else{ // No existing check exists for a transfer
+                    bankView.isHidden = true
+                    mainCardView.isHidden = true
+                    transferView.isHidden = false
+                    awaitingview.isHidden = true
+                    mainView.isHidden = false
+                    confirmationButton.isHidden = false
+                    forBankPayment = false
+                    
+                    confirmationButton.setTitle("I've sent the money", for: .normal)
                 }
-                
-                confirmationButton.setTitle("I've sent the money", for: .normal)
                 
             }else {
                 awaitingview.isHidden = false
@@ -719,6 +537,18 @@ class ParentViewController: UIViewController, WKNavigationDelegate, WKScriptMess
                 transferView.isHidden = true
             }
         }
+    }
+    
+    func transferOption(){
+        forCard = false
+        if !isCounting{ // No existing account number exists
+            self.payAzaService.initialiseService(deviceInfo: deviceInfo!, isFirstime: isFirstTime)
+            isFirstTime = false
+            showLoader(true)
+        }else{ // An existing account number is still visible
+            showtransferView()
+        }
+        handleTap()
         
     }
     
@@ -727,11 +557,11 @@ class ParentViewController: UIViewController, WKNavigationDelegate, WKScriptMess
         awaitingview.isHidden = true
         if !forCard{
             quitPayAza()
+        } else {
+            quitPayAza()
         }
         
     }
-    
-    
     
     @IBAction func transferSelected(_ sender: Any) {
         if currency! == "NGN"{
@@ -787,10 +617,14 @@ class ParentViewController: UIViewController, WKNavigationDelegate, WKScriptMess
             let emptyImage = UIImage(named: "")
             self.awaitTitle.text = Variables.status.successfulTransaction
             if self.chargeCardResponse != nil {
-                if self.chargeCardResponse!.transactionReference != nil {
-                    self.awaitViewDescrib.text = Variables.status.successfulTransactionDescription + self.transactionReference!
-                }else{
-                    self.awaitViewDescrib.text = Variables.status.successfulTransactionDescription + self.chargeCardResponse!.debugMessage!
+                if self.checkTransactionResponse != nil {
+                    self.awaitViewDescrib.text = Variables.status.successfulTransactionDescription + self.checkTransactionResponse!.transaction_reference!
+                }else {
+                    if self.chargeCardResponse!.transactionReference != nil {
+                        self.awaitViewDescrib.text = Variables.status.successfulTransactionDescription + self.transactionReference!
+                    }else{
+                        self.awaitViewDescrib.text = Variables.status.successfulTransactionDescription + self.chargeCardResponse!.debugMessage!
+                    }
                 }
                 
             } else {
@@ -821,9 +655,10 @@ class ParentViewController: UIViewController, WKNavigationDelegate, WKScriptMess
     func showFaiilure(){
         let mainBundle = Bundle(for: ParentViewController.self)
         let origImage = UIImage(named: "cancel", in: mainBundle, compatibleWith: nil)
-        if hasFinishedCalling != nil {
-            if hasFinishedCalling! {
-                DispatchQueue.main.async {
+        DispatchQueue.main.async {
+            if self.hasFinishedCalling != nil {
+                if self.hasFinishedCalling! {
+                    
                     self.awaitIcon.image = origImage
                     self.awaitTimer.isHidden = true
                     self.awaitTitle.text = Variables.status.failedTransaction
@@ -845,30 +680,32 @@ class ParentViewController: UIViewController, WKNavigationDelegate, WKScriptMess
                             self.awaitViewDescrib.text = self.chargeCardResponse?.debugMessage
                         }
                     }
+                    
+                }
+            }else{
+                self.awaitIcon.image = origImage
+                self.awaitTimer.isHidden = true
+                self.awaitingview.isHidden = false
+                self.transferView.isHidden = true
+                self.bankView.isHidden = true
+                self.mainCardView.isHidden = false
+                self.awaitButton.layer.borderWidth = 0.5
+                self.awaitButton.layer.borderColor = UIColor.lightGray.cgColor
+                self.awaitButton.layer.cornerRadius = 4
+                self.awaitButton.setTitle("Try again", for: .normal)
+                self.awaitButton.setTitleColor(self.controllers.hexStringToUIColor(hex: Variables.Colors.blueColor), for: .normal)
+                self.awaitTitle.textColor = self.controllers.hexStringToUIColor(hex: Variables.Colors.redColor)
+                self.awaitButton.isHidden = false
+            }
+            
+            if self.chargeCardResponse == nil {
+                if self.serverError != nil {
+                    self.awaitViewDescrib.text = self.serverError
+                }else {
+                    self.awaitViewDescrib.text = Variables.status.failedMessage
                 }
             }
-        }else{
-            awaitIcon.image = origImage
-            awaitTimer.isHidden = true
-            awaitingview.isHidden = false
-            transferView.isHidden = true
-            bankView.isHidden = true
-            mainCardView.isHidden = false
-            awaitButton.layer.borderWidth = 0.5
-            awaitButton.layer.borderColor = UIColor.lightGray.cgColor
-            awaitButton.layer.cornerRadius = 4
-            awaitButton.setTitle("Try again", for: .normal)
-            awaitButton.setTitleColor(controllers.hexStringToUIColor(hex: Variables.Colors.blueColor), for: .normal)
-            awaitTitle.textColor = controllers.hexStringToUIColor(hex: Variables.Colors.redColor)
-            awaitButton.isHidden = false
-        }
-        
-        if chargeCardResponse == nil {
-            if serverError != nil {
-                awaitViewDescrib.text = serverError
-            }else {
-                awaitViewDescrib.text = Variables.status.failedMessage
-            }
+            
         }
         self.forConfirmation = false
         self.myTimer?.invalidate()
@@ -876,7 +713,7 @@ class ParentViewController: UIViewController, WKNavigationDelegate, WKScriptMess
     
     
     // Await view, A this time, there is a network request
-    func showLoader(){
+    func showLoader(_ isGeneratingAccount: Bool){
         let imageData = UIImage.gifImageWithName("card_loader")
         awaitIcon.image = imageData
         awaitIcon.isHidden = false
@@ -884,10 +721,17 @@ class ParentViewController: UIViewController, WKNavigationDelegate, WKScriptMess
         transferView.isHidden = true
         bankView.isHidden = true
         awaitTimer.isHidden = true
+        self.mainCardView.isHidden = true
         awaitTitle.textColor = controllers.hexStringToUIColor(hex: Variables.Colors.orangeColor)
-        awaitTitle.text = Variables.status.awaitingConfirm
-        awaitViewDescrib.text = Variables.status.awaitingMessage
-        self.forConfirmation = true
+        if isGeneratingAccount {
+            awaitTitle.text = Variables.status.generatingAccount
+            awaitViewDescrib.text = Variables.status.awaitingMessageforAccount
+        }else {
+            awaitTitle.text = Variables.status.awaitingConfirm
+            awaitViewDescrib.text = Variables.status.awaitingMessage
+            self.forConfirmation = true
+        }
+        
         // self.startCountdown()
     }
     
@@ -905,16 +749,12 @@ class ParentViewController: UIViewController, WKNavigationDelegate, WKScriptMess
                 developerView.isHidden = false
             }else{
                 developerView.isHidden = true
-                showLoader()
+                self.isCheckingForRespone  = true
+                showLoader(false)
             }
             
             
-        }else{
-            if forBankPayment {
-                configureViews()
-            }
         }
-        
     }
     
     @IBAction func developerContinueAction(_ sender: Any) {
@@ -988,15 +828,18 @@ class ParentViewController: UIViewController, WKNavigationDelegate, WKScriptMess
     }
     
     func start(){
-        if count > 0 {
-            self.myTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(myUpdate), userInfo: nil, repeats: true);
-        }else {
-            //  Time has elapsed
-            isCounting = false
-            if finalResponse == nil {
-                showFaiilure()
+        if isCounting {
+            if count > 0 {
+                self.myTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(myUpdate), userInfo: nil, repeats: true);
+            }else {
+                //  Time has elapsed
+                isCounting = false
+                if finalResponse == nil {
+                    showFaiilure()
+                }
             }
         }
+        
         
     }
     
@@ -1031,23 +874,11 @@ class ParentViewController: UIViewController, WKNavigationDelegate, WKScriptMess
             myTimer!.invalidate()
             if forConfirmation == true {
                 if self.forBankPayment == false {
-                    if chargeCardResponse != nil {
-                        
-                    }
-                    else {
-                        if self.finalResponse != nil {
-                            self.showSucess()
-                        }else {
-                            self.showFaiilure()
-                        }
-                    }
-                }else{
-                    if self.validAccountNumber(validNumber: self.accountNumberField.text!) == true {
+                    if self.finalResponse != nil {
                         self.showSucess()
                     }else {
                         self.showFaiilure()
                     }
-                    
                 }
             } else {
                 if self.finalResponse != nil {
@@ -1062,7 +893,7 @@ class ParentViewController: UIViewController, WKNavigationDelegate, WKScriptMess
     
     
     private func recreateNewAccount( ){
-        showLoader()
+        showLoader(false)
     }
     
     
@@ -1089,15 +920,13 @@ class ParentViewController: UIViewController, WKNavigationDelegate, WKScriptMess
             let month = String(cardDate.text!.prefix(2))
             let year = String(cardDate.text!.suffix(2))
             
-            showLoader()
-             card = CardBody(expiryMonth: month, expiryYear: year, securityCode:  cvvText.text!, cardNumber: cardNum.text!)
+            showLoader(false)
+            card = CardBody(expiryMonth: month, expiryYear: year, securityCode:  cvvText.text!, cardNumber: cardNum.text!)
             let transacRef =  String(deviceInfo!.deviceId!.prefix(5))+controllers.getCcurrentDate()
             self.transactionReference = transacRef
             let cardValues  = CardDynamicDataValues(currency: self.currency, callback_url: self.callbackUrl, transaction_reference: transacRef, transactionDescription: self.transactionDescription)
             
-            self.configureWeb(htmlLink: "", baseUrl: "")
-            
-          //  payAzaService.chargeCard(card: card, cardValues: cardValues, user: backUpUserdetails!)
+            payAzaService.chargeCard(card: card, cardValues: cardValues, user: backUpUserdetails!)
         }
         else{
             return
@@ -1186,12 +1015,7 @@ extension ParentViewController: UITextFieldDelegate {
             self.controllers.getCardType(cardNumber: accountNumberField.text!, cardImageView: self.cardTypeIcon, vc: self)
             accountNumberField.resignFirstResponder()
         }
-        //        if textField == cardNum {
-        //            if cardNum.text != ""{
-        //                self.controllers.getCardType(cardNumber: cardNum.text!, cardImageView: self.cardTypeIcon, vc: self)
-        //            }
-        //
-        //        }
+      
     }
     
     

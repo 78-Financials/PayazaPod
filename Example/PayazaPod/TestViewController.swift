@@ -60,6 +60,10 @@ class TestViewController: UIViewController, PayazaCallbackMethods {
     @objc func closeKeyboard(){
         phone.resignFirstResponder()
         amount.resignFirstResponder()
+        firstName.resignFirstResponder()
+        merchantName.resignFirstResponder()
+        keyField.resignFirstResponder()
+        emailAdreess.resignFirstResponder()
     }
 
     @IBAction func checkOutAction(_ sender: Any) {

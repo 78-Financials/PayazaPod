@@ -27,6 +27,7 @@ class SocketIOManager: NSObject {
                 print(socketResponse)
                 if self.viewModel != nil {
                     self.viewModel!.paymentVerifiedByPayAza.value = socketResponse
+                    self.closeConnection()
                 }
                 else {
                     print("Viewmodel needs to be initialised")
