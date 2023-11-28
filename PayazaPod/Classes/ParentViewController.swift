@@ -156,6 +156,7 @@ class ParentViewController: UIViewController, WKNavigationDelegate{
     var viewModel : ViewModelClass?
     var payAzaManager: PayazaManager?
     var connectionMode : String?
+    private var currencySymbol : String?
     var amount: Double?
     var baseUrl : String?
     var currency : String?
@@ -212,13 +213,19 @@ class ParentViewController: UIViewController, WKNavigationDelegate{
         mainCardView.addGestureRecognizer(tap)
         
         securedText.textColor = controllers.hexStringToUIColor(hex: "#9AA1B1")
+        transferBtn.tintColor = controllers.hexStringToUIColor(hex: Variables.Colors.grey)
+        cardBtn.tintColor = controllers.hexStringToUIColor(hex: Variables.Colors.blueColor)
+        cardBtn.setTitleColor(controllers.hexStringToUIColor(hex: Variables.Colors.blueColor), for: .normal)
+        cardBtn.setTitleColor(controllers.hexStringToUIColor(hex: Variables.Colors.fontBlue), for: .selected)
+        transferBtn.setTitleColor(controllers.hexStringToUIColor(hex: Variables.Colors.blueColor), for: .normal)
+       
         
-        
-        transferBtn.tintColor = controllers.hexStringToUIColor(hex: "#0E2354")
-        cardBtn.tintColor = controllers.hexStringToUIColor(hex: "#0E2354")
         cardNum.delegate = self
         cardDate.delegate = self
+        self.cardProceedBtn.alpha = 0.5
+        cardProceedBtn.isUserInteractionEnabled = false
         cvvText.delegate = self
+        
         
         let str = "Payaza"
         let labelFont = UIFont(name: "HelveticaNeue-Medium", size: 12)
@@ -541,6 +548,8 @@ class ParentViewController: UIViewController, WKNavigationDelegate{
     
     func transferOption(){
         forCard = false
+        transferBtn.tintColor = controllers.hexStringToUIColor(hex: Variables.Colors.blueColor)
+        cardBtn.tintColor = controllers.hexStringToUIColor(hex: Variables.Colors.grey)
         if !isCounting{ // No existing account number exists
             self.payAzaService.initialiseService(deviceInfo: deviceInfo!, isFirstime: isFirstTime)
             isFirstTime = false
@@ -555,6 +564,7 @@ class ParentViewController: UIViewController, WKNavigationDelegate{
     
     @IBAction func resultAction(_ sender: Any) {
         awaitingview.isHidden = true
+       
         if !forCard{
             quitPayAza()
         } else {
@@ -567,15 +577,20 @@ class ParentViewController: UIViewController, WKNavigationDelegate{
         if currency! == "NGN"{
             transferOption()
         }else {
-            self.showToast(message: "Not available for the currency used", font: .systemFont(ofSize: 13))
+           self.showToast(message: "Not available for the currency used", font: .systemFont(ofSize: 13))
         }
+        
+        currencySymbol = viewModel?.getCurrencyIcon(currency: currency!)
         
     }
     
     
     
     func cardOption() {
+        currencySymbol = viewModel?.getCurrencyIcon(currency: currency!)
         forCard = true
+        transferBtn.tintColor = controllers.hexStringToUIColor(hex: Variables.Colors.grey)
+        cardBtn.tintColor = controllers.hexStringToUIColor(hex: Variables.Colors.blueColor)
         if developerView.isHidden {
             bankView.isHidden = true
             transferView.isHidden = true
@@ -584,7 +599,7 @@ class ParentViewController: UIViewController, WKNavigationDelegate{
             mainView.isHidden = false
             
             
-            let str = currency! + String(amount!)
+            let str = currencySymbol! + String(amount!)
             let labelFont = UIFont(name: "HelveticaNeue-Bold", size: 14)
             let attrs : Dictionary = [NSAttributedString.Key.foregroundColor : controllers.hexStringToUIColor(hex: Variables.Colors.fontBlue), NSAttributedString.Key.font : labelFont]
             let attributedStr = NSMutableAttributedString(string:str, attributes:attrs as [NSAttributedString.Key : Any])
@@ -728,7 +743,11 @@ class ParentViewController: UIViewController, WKNavigationDelegate{
             awaitViewDescrib.text = Variables.status.awaitingMessageforAccount
         }else {
             awaitTitle.text = Variables.status.awaitingConfirm
-            awaitViewDescrib.text = Variables.status.awaitingMessage
+            if forCard {
+                awaitViewDescrib.text = Variables.status.awaitCard
+            }else{
+                awaitViewDescrib.text = Variables.status.awaitingMessage
+            }
             self.forConfirmation = true
         }
         
@@ -994,17 +1013,18 @@ extension ParentViewController: UITextFieldDelegate {
             controllers.setUpViewBorderAndColor(theView: cardNumBg, theColor: controllers.hexStringToUIColor(hex: "#2357D1"), borderWidth: 0.5)
             controllers.setUpViewBorderAndColor(theView: dateBg, theColor: controllers.hexStringToUIColor(hex: "#E6E7EC"), borderWidth: 0.5)
             controllers.setUpViewBorderAndColor(theView: cvvView, theColor: controllers.hexStringToUIColor(hex: "#E6E7EC"), borderWidth: 0.5)
-            
         }
         if textField == cardDate{
             controllers.setUpViewBorderAndColor(theView: cardNumBg, theColor: controllers.hexStringToUIColor(hex: "#E6E7EC"), borderWidth: 0.5)
             controllers.setUpViewBorderAndColor(theView: dateBg, theColor: controllers.hexStringToUIColor(hex: "#2357D1"), borderWidth: 0.5)
             controllers.setUpViewBorderAndColor(theView: cvvView, theColor: controllers.hexStringToUIColor(hex: "#E6E7EC"), borderWidth: 0.5)
+           
         }
         if textField == cvvText {
             controllers.setUpViewBorderAndColor(theView: cardNumBg, theColor: controllers.hexStringToUIColor(hex: "#E6E7EC"), borderWidth: 0.5)
             controllers.setUpViewBorderAndColor(theView: dateBg, theColor: controllers.hexStringToUIColor(hex: "#E6E7EC"), borderWidth: 0.5)
             controllers.setUpViewBorderAndColor(theView: cvvView, theColor: controllers.hexStringToUIColor(hex: "#2357D1"), borderWidth: 0.5)
+            
         }
         return true
     }
@@ -1014,8 +1034,36 @@ extension ParentViewController: UITextFieldDelegate {
         if textField == accountNumberField {
             self.controllers.getCardType(cardNumber: accountNumberField.text!, cardImageView: self.cardTypeIcon, vc: self)
             accountNumberField.resignFirstResponder()
+            
+        }
+        if textField == cardNum {
+            if cardNum.text?.count == 16 && cvvText.text?.count == 3 && cardDate.text?.count == 5 {
+                cardProceedBtn.isUserInteractionEnabled = true
+                cardProceedBtn.alpha = 1
+            }else{
+                cardProceedBtn.isUserInteractionEnabled = false
+                cardProceedBtn.alpha = 0.4
+            }
         }
       
+        if textField == cardDate {
+            if cardNum.text?.count == 16 && cvvText.text?.count == 3 && cardDate.text?.count == 5 {
+                cardProceedBtn.isUserInteractionEnabled = true
+                cardProceedBtn.alpha = 1
+            }else{
+                cardProceedBtn.isUserInteractionEnabled = false
+                cardProceedBtn.alpha = 0.4
+            }
+        }
+        if textField == cvvText {
+            if cardNum.text?.count == 16 && cvvText.text?.count == 3 && cardDate.text?.count == 5 {
+                cardProceedBtn.isUserInteractionEnabled = true
+                cardProceedBtn.alpha = 1
+            }else{
+                cardProceedBtn.isUserInteractionEnabled = false
+                cardProceedBtn.alpha = 0.4
+            }
+        }
     }
     
     
@@ -1035,6 +1083,13 @@ extension ParentViewController: UITextFieldDelegate {
             //            }
             if updatedText.count == 16 {
                 self.controllers.getCardType(cardNumber: updatedText, cardImageView: self.cardTypeIcon, vc: self)
+                if  cvvText.text?.count == 3 && cardDate.text?.count == 5 {
+                    cardProceedBtn.isUserInteractionEnabled = true
+                    cardProceedBtn.alpha = 1
+                }else{
+                    cardProceedBtn.isUserInteractionEnabled = false
+                    cardProceedBtn.alpha = 0.4
+                }
             }else{
                 controllers.setImage(imageName: "", imaveView: self.cardTypeIcon)
             }
@@ -1057,9 +1112,18 @@ extension ParentViewController: UITextFieldDelegate {
                 if !cardDate.text!.contains("/"){
                     cardDate.text = cardDate.text?.appending("/")
                 }
-                
-                
+             }
+            
+            if updatedText.count == 5 {
+                if cardNum.text?.count == 16 && cvvText.text?.count == 3 {
+                    cardProceedBtn.isUserInteractionEnabled = true
+                    cardProceedBtn.alpha = 1
+                }else{
+                    cardProceedBtn.isUserInteractionEnabled = false
+                    cardProceedBtn.alpha = 0.4
+                }
             }
+            
             
             // make sure the result is under 16 characters
             return updatedText.count <= 5
@@ -1075,6 +1139,15 @@ extension ParentViewController: UITextFieldDelegate {
             // add their new text to the existing text
             let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
             
+            if updatedText.count == 3 {
+                if cardNum.text?.count == 16 && cardDate.text?.count == 5 {
+                    cardProceedBtn.isUserInteractionEnabled = true
+                    cardProceedBtn.alpha = 1
+                }else{
+                    cardProceedBtn.isUserInteractionEnabled = false
+                    cardProceedBtn.alpha = 0.4
+                }
+            }
             // make sure the result is under 16 characters
             return updatedText.count <= 3
         }

@@ -53,7 +53,7 @@
 		73EEC3EA26AA19E136AF837A0FE0BA6D /* FrameCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = A67B4935171E0D8A297D0A2F658B7D06 /* FrameCollector.swift */; };
 		74012B832FAF67F8D62A2B27CDAFE8B5 /* DPDConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89543F44DC4247A520ABC50C4324295D /* DPDConstants.swift */; };
 		75117FDCE6D7B58CEA615D30EFEAE3EB /* HTTPHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6474C92BCAA39816F5B09B7934DE9C52 /* HTTPHandler.swift */; };
-		77073CEE2ABDFCC400156293 /* mastercard.png in Resources */ = {isa = PBXBuildFile; fileRef = 77073CED2ABDFCC400156293 /* mastercard.png */; };
+		77073CEE2ABDFCC400156293 /* master.svg.png in Resources */ = {isa = PBXBuildFile; fileRef = 77073CED2ABDFCC400156293 /* master.svg.png */; };
 		77073CF02AC35AE500156293 /* CardValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77073CEF2AC35AE500156293 /* CardValidator.swift */; };
 		77073D002AC3636A00156293 /* dci.png in Resources */ = {isa = PBXBuildFile; fileRef = 77073CFF2AC3636A00156293 /* dci.png */; };
 		77073D012AC3636A00156293 /* dci.png in Resources */ = {isa = PBXBuildFile; fileRef = 77073CFF2AC3636A00156293 /* dci.png */; };
@@ -278,7 +278,7 @@
 		74D37ACD11720D0B1713A8C9BAF4EFB9 /* DropDown-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "DropDown-prefix.pch"; sourceTree = "<group>"; };
 		763F11EE56E5C4707D9682055761CCE3 /* TCPTransport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TCPTransport.swift; path = Sources/Transport/TCPTransport.swift; sourceTree = "<group>"; };
 		76879C4D9883BFE86F0873A865FA1C13 /* Pods-PayazaPod_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-PayazaPod_Example.debug.xcconfig"; sourceTree = "<group>"; };
-		77073CED2ABDFCC400156293 /* mastercard.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = mastercard.png; path = PayazaPod/Assets/mastercard.png; sourceTree = "<group>"; };
+		77073CED2ABDFCC400156293 /* master.svg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = master.svg.png; path = PayazaPod/Assets/master.svg.png; sourceTree = "<group>"; };
 		77073CEF2AC35AE500156293 /* CardValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CardValidator.swift; path = PayazaPod/Classes/CardValidator.swift; sourceTree = "<group>"; };
 		77073CFF2AC3636A00156293 /* dci.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = dci.png; path = PayazaPod/Assets/dci.png; sourceTree = "<group>"; };
 		77073D022AC3642A00156293 /* others.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = others.png; path = PayazaPod/Assets/others.png; sourceTree = "<group>"; };
@@ -445,7 +445,7 @@
 				77073D022AC3642A00156293 /* others.png */,
 				77073D042AC3642B00156293 /* visa.png */,
 				77073CFF2AC3636A00156293 /* dci.png */,
-				77073CED2ABDFCC400156293 /* mastercard.png */,
+				77073CED2ABDFCC400156293 /* master.svg.png */,
 				43E90A0B0568CE6FDA8CEB457A7AD975 /* awaiticon.png */,
 				BD942A31C3B246B3ACA9D56D79115BBE /* bank.png */,
 				BF5B382FBD0872EC6CDC937883F6DE76 /* cancel.png */,
@@ -1080,7 +1080,7 @@
 				77073D082AC3642B00156293 /* amex.png in Resources */,
 				7FA72BD0CCB4D0C62D854DC83716B2E4 /* close.png in Resources */,
 				5E7C1287F2945FB8494040E2AFDD8ED0 /* copy.png in Resources */,
-				77073CEE2ABDFCC400156293 /* mastercard.png in Resources */,
+				77073CEE2ABDFCC400156293 /* master.svg.png in Resources */,
 				7118158FF627A98DE21BFBE71099BCB3 /* credit-card.png in Resources */,
 				5B32A9B04E3849734A68AA0B027F651B /* credit_card_dark.png in Resources */,
 				AEA4CA173E73009B443797D441293A82 /* dropdown.png in Resources */,

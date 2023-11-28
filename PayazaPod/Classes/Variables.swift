@@ -23,6 +23,7 @@ struct Variables {
         static let connectionError = "Check your Internet connections and try again"
         static let completed = "Completed"
         static let failed = "Failed"
+        static let awaitCard = "Please wait a couple seconds, we're trying to verify your card details"
         
     }
     
@@ -33,6 +34,8 @@ struct Variables {
         static let blueColor: String = "#2357D1"
         static let white: String = "#FFFFFF"
         static let fontBlue: String = "#0E2354"
+        static let inActiveGrey: String = "#E6E7EC"
+        static let grey: String = "#cccccc"
     }
     
     struct Constants {

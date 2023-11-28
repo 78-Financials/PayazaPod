@@ -27,7 +27,7 @@ class ViewModelClass: ObservableObject {
     
     func cardFormValidation(cardNum: UITextField, cardDate: UITextField, cardCVV: UITextField, controllers: Controllers, vc: UIViewController) -> Bool{
         if !controllers.isFieldValid(editField: cardNum, vc: vc, errorText: Variables.ErrorMessage.invalidCardNum) {
-             return false
+            return false
         }
         if !controllers.isFieldValid(editField: cardDate, vc: vc, errorText: Variables.ErrorMessage.invalidCardDate) {
             return false
@@ -43,14 +43,31 @@ class ViewModelClass: ObservableObject {
             vc.showToast(message: Variables.ErrorMessage.invalidCardDate, font: .systemFont(ofSize: 14))
             return false
         }
-       
+        
         if cardCVV.text!.count != 3 {
             vc.showToast(message: Variables.ErrorMessage.invalidCardCvv, font: .systemFont(ofSize: 14))
             return false
         }
-
+        
         return true
     }
     
-
+    func getCurrencyIcon(currency: String) -> String{
+        if currency == "NGN"{
+            return "₦"
+        }else {
+            if currency == "USD"{
+                return "$"
+            }else if currency == "EUR" {
+                return "€"
+            }
+            else if currency == "GBP" {
+                return "£"
+            }
+            else {
+                return currency
+            }
+        }
+        
+    }
 }

@@ -205,7 +205,7 @@ class Controllers {
             case "Visa":
                 setImage(imageName: "visa", imaveView: cardImageView)
             case "MasterCard":
-                setImage(imageName: "mastercard", imaveView: cardImageView)
+                setImage(imageName: "master.svg.png", imaveView: cardImageView)
             case "Verve":
                 setImage(imageName: "verve", imaveView: cardImageView)
             case "Maestro":
