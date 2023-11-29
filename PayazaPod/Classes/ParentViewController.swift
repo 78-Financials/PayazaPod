@@ -351,6 +351,13 @@ class ParentViewController: UIViewController, WKNavigationDelegate{
             config.userContentController = userContentController
             self.myWebview = WKWebView(frame: self.mainView.bounds, configuration: config)
             self.myWebview!.navigationDelegate = self
+            self.myWebview!.contentMode = .scaleToFill
+            self.myWebview!.scrollView.isScrollEnabled = true
+            self.myWebview!.scrollView.zoomScale = 2.0
+            self.myWebview!.scrollView.bouncesZoom = false
+            self.myWebview!.scrollView.contentInsetAdjustmentBehavior = .automatic
+            self.myWebview!.scrollView.maximumZoomScale = 1.0
+            self.myWebview!.autoresizingMask = [.flexibleHeight, .flexibleWidth]
             self.mainView.addSubview(self.myWebview!)
             self.myWebview!.loadHTMLString(htmlLink, baseURL: nil)
             self.myWebview!.allowsBackForwardNavigationGestures = true
@@ -631,32 +638,14 @@ class ParentViewController: UIViewController, WKNavigationDelegate{
             self.awaitTimer.isHidden = true
             let emptyImage = UIImage(named: "")
             self.awaitTitle.text = Variables.status.successfulTransaction
-            if self.chargeCardResponse != nil {
-                if self.checkTransactionResponse != nil {
-                    self.awaitViewDescrib.text = Variables.status.successfulTransactionDescription + self.checkTransactionResponse!.transaction_reference!
-                }else {
-                    if self.chargeCardResponse!.transactionReference != nil {
-                        self.awaitViewDescrib.text = Variables.status.successfulTransactionDescription + self.transactionReference!
-                    }else{
-                        self.awaitViewDescrib.text = Variables.status.successfulTransactionDescription + self.chargeCardResponse!.debugMessage!
-                    }
-                }
-                
-            } else {
-                if self.finalResponse != nil {
-                    self.awaitViewDescrib.text = Variables.status.successfulTransactionDescription + self.finalResponse!.reference!
-                }else{
-                    self.awaitViewDescrib.text = Variables.status.successfulTransactionDescription
-                }
-            }
-            
+            self.awaitViewDescrib.text = Variables.status.successfulTransactionDescription
             self.awaitButton.setImage(emptyImage, for: .normal)
             self.forConfirmation = false
             self.awaitButton.isHidden = false
             self.awaitButton.layer.borderWidth = 0.5
             self.awaitButton.layer.borderColor = UIColor.lightGray.cgColor
             self.awaitButton.layer.cornerRadius = 4
-            self.awaitButton.setTitle("Go back to PayAza", for: .normal)
+            self.awaitButton.setTitle("Go back to " + self.merchantNameString! , for: .normal)
             self.awaitButton.setTitleColor(self.controllers.hexStringToUIColor(hex: Variables.Colors.blueColor), for: .normal)
             self.awaitTitle.textColor = self.controllers.hexStringToUIColor(hex: Variables.Colors.greenColor)
             self.awaitingview.isHidden = false

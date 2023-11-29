@@ -252,8 +252,12 @@ struct PayAzaService {
                     else {// transaction was a success
                         let responseData = CheckTransactionResponse(respons: responseContent  as! NSDictionary)
                         // Pass response to the mainpage
-                        viewModel?.checkTransactionResponse.value = responseData
-                       
+                        if responseData.transaction_status == "Failed"{
+                            viewModel?.hasServerError.value = responseData.debug_message
+                        }else{
+                            viewModel?.checkTransactionResponse.value = responseData
+                        }
+                        
                     }
                     
                 } catch {

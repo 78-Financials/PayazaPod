@@ -13,7 +13,7 @@ struct Variables {
         static let invalidAccunt: String = "Invalid Account Number"
         static let invalidAccuntMessage: String = "The account number for this transaction is not valid, kindly try again"
         static let successfulTransaction = "Payment Successful "
-        static let successfulTransactionDescription = "This transaction has been processed. Your reference number is "
+        static let successfulTransactionDescription = "This transaction has been processed. Please check your email address for a receipt"
         static let awaitingConfirm: String = "Awaiting Confirmation"
         static let generatingAccount: String = "Please Wait"
         static let awaitingMessage = "We’re waiting for confirmation from your bank. Kindly bear with us."
