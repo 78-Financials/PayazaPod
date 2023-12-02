@@ -190,7 +190,6 @@ class ParentViewController: UIViewController, WKNavigationDelegate{
         super.viewDidLoad()
         self.overrideUserInterfaceStyle = .light
         loader.isHidden = false
-        
         copyIcon.isUserInteractionEnabled = true
         let copyTap = UITapGestureRecognizer(target: self, action: #selector(copyAction))
         copyIcon.addGestureRecognizer(copyTap)
@@ -218,7 +217,7 @@ class ParentViewController: UIViewController, WKNavigationDelegate{
         cardBtn.setTitleColor(controllers.hexStringToUIColor(hex: Variables.Colors.blueColor), for: .normal)
         cardBtn.setTitleColor(controllers.hexStringToUIColor(hex: Variables.Colors.fontBlue), for: .selected)
         transferBtn.setTitleColor(controllers.hexStringToUIColor(hex: Variables.Colors.blueColor), for: .normal)
-       
+        
         
         cardNum.delegate = self
         cardDate.delegate = self
@@ -348,19 +347,24 @@ class ParentViewController: UIViewController, WKNavigationDelegate{
             let config = WKWebViewConfiguration()
             let userContentController = WKUserContentController()
             
+            
+            let source: String = "var meta = document.createElement('meta');" +
+            "meta.name = 'viewport';" +
+            "meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';" +
+            "var head = document.getElementsByTagName('head')[0];" +
+            "head.appendChild(meta);"
+            let script: WKUserScript = WKUserScript(source: source, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
+            userContentController.addUserScript(script)
+            
+            
             config.userContentController = userContentController
             self.myWebview = WKWebView(frame: self.mainView.bounds, configuration: config)
             self.myWebview!.navigationDelegate = self
-            self.myWebview!.contentMode = .scaleToFill
-            self.myWebview!.scrollView.isScrollEnabled = true
-            self.myWebview!.scrollView.zoomScale = 2.0
-            self.myWebview!.scrollView.bouncesZoom = false
-            self.myWebview!.scrollView.contentInsetAdjustmentBehavior = .automatic
-            self.myWebview!.scrollView.maximumZoomScale = 1.0
-            self.myWebview!.autoresizingMask = [.flexibleHeight, .flexibleWidth]
+            self.myWebview!.scrollView.isMultipleTouchEnabled = false
             self.mainView.addSubview(self.myWebview!)
             self.myWebview!.loadHTMLString(htmlLink, baseURL: nil)
             self.myWebview!.allowsBackForwardNavigationGestures = true
+            
             
         }
     }
@@ -371,8 +375,6 @@ class ParentViewController: UIViewController, WKNavigationDelegate{
         print(error)
         
     }
-    
-    
     
     
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: (WKNavigationActionPolicy) -> Void) {
@@ -430,8 +432,9 @@ class ParentViewController: UIViewController, WKNavigationDelegate{
         if serverError != nil {
             viewModel?.serverError.value = serverError
         }else{
-            if chargeCardResponse != nil {
-                viewModel?.getChargeResponse.value = chargeCardResponse
+            if checkTransactionResponse != nil {
+                let tResponse = TransactionResponse(message: checkTransactionResponse?.debug_message, status: checkTransactionResponse?.transaction_status, reference: checkTransactionResponse?.transaction_reference, time: checkTransactionResponse?.created_at)
+                viewModel?.paymentComplete.value = tResponse
             }else{
                 if finalResponse != nil {
                     viewModel?.paymentComplete.value = finalResponse
@@ -571,7 +574,7 @@ class ParentViewController: UIViewController, WKNavigationDelegate{
     
     @IBAction func resultAction(_ sender: Any) {
         awaitingview.isHidden = true
-       
+        
         if !forCard{
             quitPayAza()
         } else {
@@ -584,7 +587,7 @@ class ParentViewController: UIViewController, WKNavigationDelegate{
         if currency! == "NGN"{
             transferOption()
         }else {
-           self.showToast(message: "Not available for the currency used", font: .systemFont(ofSize: 13))
+            self.showToast(message: "Not available for the currency used", font: .systemFont(ofSize: 13))
         }
         
         currencySymbol = viewModel?.getCurrencyIcon(currency: currency!)
@@ -606,7 +609,7 @@ class ParentViewController: UIViewController, WKNavigationDelegate{
             mainView.isHidden = false
             
             
-            let str = currencySymbol! + String(amount!)
+            let str = currencySymbol! + String(format:"%.2f", amount!)
             let labelFont = UIFont(name: "HelveticaNeue-Bold", size: 14)
             let attrs : Dictionary = [NSAttributedString.Key.foregroundColor : controllers.hexStringToUIColor(hex: Variables.Colors.fontBlue), NSAttributedString.Key.font : labelFont]
             let attributedStr = NSMutableAttributedString(string:str, attributes:attrs as [NSAttributedString.Key : Any])
@@ -1007,7 +1010,7 @@ extension ParentViewController: UITextFieldDelegate {
             controllers.setUpViewBorderAndColor(theView: cardNumBg, theColor: controllers.hexStringToUIColor(hex: "#E6E7EC"), borderWidth: 0.5)
             controllers.setUpViewBorderAndColor(theView: dateBg, theColor: controllers.hexStringToUIColor(hex: "#2357D1"), borderWidth: 0.5)
             controllers.setUpViewBorderAndColor(theView: cvvView, theColor: controllers.hexStringToUIColor(hex: "#E6E7EC"), borderWidth: 0.5)
-           
+            
         }
         if textField == cvvText {
             controllers.setUpViewBorderAndColor(theView: cardNumBg, theColor: controllers.hexStringToUIColor(hex: "#E6E7EC"), borderWidth: 0.5)
@@ -1034,7 +1037,7 @@ extension ParentViewController: UITextFieldDelegate {
                 cardProceedBtn.alpha = 0.4
             }
         }
-      
+        
         if textField == cardDate {
             if cardNum.text?.count == 16 && cvvText.text?.count == 3 && cardDate.text?.count == 5 {
                 cardProceedBtn.isUserInteractionEnabled = true
@@ -1101,7 +1104,7 @@ extension ParentViewController: UITextFieldDelegate {
                 if !cardDate.text!.contains("/"){
                     cardDate.text = cardDate.text?.appending("/")
                 }
-             }
+            }
             
             if updatedText.count == 5 {
                 if cardNum.text?.count == 16 && cvvText.text?.count == 3 {
