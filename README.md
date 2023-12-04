@@ -48,7 +48,7 @@ private var transactionAmount: Int64?
  
  
 @objc func showExample(){
-   let baseUrl = "https://router-live.78financials.com/api/request/secure/payloadhandler"
+   let baseUrl = "https://your-base-url"
    let manager = PayazaManager()
    transactionAmount = 100
    manager.initialize(delegateController: self, viewControler: self)
