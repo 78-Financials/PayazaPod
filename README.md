@@ -52,7 +52,9 @@ private var transactionAmount: Int64?
    let manager = PayazaManager()
    transactionAmount = 100
    manager.initialize(delegateController: self, viewControler: self)
-   manager.PayAzaConfig(merchantKey: "Your Merchant Key Here", firstname: "Firstname", lastname: "Lastname", email: "emailAdreess", phone: "Phone",        transactionRef: "transactionReference", amount: transactionAmount!, isLive: true, baseUrl: baseUrl) // Set isLive to false during testing and set to true during production
+   manager.PayAzaConfig(merchantKey: "Your Merchant Key Here", merchantName: "Test Merchant" currency: "USD", firstname: "Firstname",
+   lastname: "Lastname", email: "emailAdreess", phone: "Phone", transactionRef: "transactionReference", 
+   amount: transactionAmount!, isLive: true, baseUrl: baseUrl)  // Set isLive to false during testing and set to true during production
    manager.payNow()
 }
 
